@@ -89,25 +89,25 @@ import 'package:e_commerce/views/bottom_nav_menu.dart';
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Column(
-                  children: [
-                    Icon(Icons.shopping_bag,
-                        size: 80, color: Colors.deepPurple),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Shop Smarter",
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple.shade700,
-                      ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.shopping_bag,
+                      size: 80, color: Colors.deepPurple),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Shop Smarter",
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple.shade700,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 60),
                   Form(
                 key: _formKey,
                 child: Column(
@@ -135,12 +135,12 @@ import 'package:e_commerce/views/bottom_nav_menu.dart';
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple.shade200),
+                              BorderSide(color: const Color(0xFFB39DDB)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: const Color(0xFF673AB7), width: 2),
                         ),
                       ),
                     ),

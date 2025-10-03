@@ -15,6 +15,9 @@ final ProductService _productService =ProductService();
 
  bool get isLoading=>_isLoading;
 
+ String? _erroMessage;
+ String? get errorMessage=>_erroMessage;
+
 
  void fetchProducts(){
   _productService.getProducts().listen((productsList){
@@ -24,24 +27,28 @@ final ProductService _productService =ProductService();
  }
 
 
-Future<void>addSingleProduct(Product product)async{
-  _isLoading=true;
+  Future<void>addSingleProduct(Product product)async{
+   _isLoading = true;
+notifyListeners();
+
+try {
+  await _productService.addProduct(product);
+} catch (e) {
+  _erroMessage=e.toString();
+  print("Error adding product: $e");
+} finally {
+  _isLoading = false;
   notifyListeners();
-
-  try{
-    _productService.addProduct(product);
-  }catch (e){
-    print("error fetching in productts");
-  }
-
-
-//      Product? result= await _productService.addProduct(product);
- 
-//  if(result ! = null){
-
-//  }
-
 }
+
+
+  //      Product? result= await _productService.addProduct(product);
+  
+  //  if(result ! = null){
+
+  //  }
+
+  }
 
 
 Future<void>updatetheProduct(Product product, String id)async{
@@ -49,7 +56,12 @@ Future<void>updatetheProduct(Product product, String id)async{
   try{
     await _productService.updateProduct(id, product);
   }catch (e){
+    _erroMessage=e.toString();
     print("error updating product");
+  }
+  finally{
+    _isLoading=false;
+    notifyListeners();
   }
 
 }
@@ -63,11 +75,12 @@ try{
 
 }catch (e){
   print("error in deleting product");
+  _erroMessage=e.toString();
 }
-
-    
-    _isLoading = false;
-    notifyListeners();
+finally{
+  _isLoading=false;
+  notifyListeners();
+}
   }
 
   Future<Product?> getProductById(String id) async {
@@ -75,7 +88,11 @@ try{
       return await _productService.getProduct(id);
     } catch (e) {
       print("Error getting product: $e");
+      _erroMessage=e.toString();
       return null;
+    }finally{
+      _isLoading=false;
+      notifyListeners();
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_commerce/controllers/auth_provider.dart';
+import 'package:e_commerce/controllers/product_provider.dart';
 import 'package:e_commerce/views/login_screen.dart';
 import 'package:e_commerce/widgets/custom_search_bar.dart';
 import 'package:e_commerce/widgets/home_product_card.dart';
@@ -11,6 +12,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productProvider=Provider.of<ProductProvider>(context);
     return  Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(36, 123, 209, 1),
@@ -22,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                final authProvider = Provider.of<AuthProvider>(context, listen: false);
                
         try {
-           authProvider.logout(); // Call the provider logout
+           authProvider.logout();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => LoginScreen()),
@@ -37,6 +39,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body:SingleChildScrollView(
+        
           child: Column(
             children: [
               Container(
@@ -69,7 +72,8 @@ class HomeScreen extends StatelessWidget {
                             itemCount: 6,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index)=>
-                             VertiacalImage(image: '', title: 'title',)),
+                             VerticalImage(image: '', title: 'title')
+                             ),
                         ),
                       ],
                       ),
@@ -150,26 +154,33 @@ class HomeScreen extends StatelessWidget {
                                    ),
                                  ),
                             SizedBox(height: 20),
-                           GridView.builder(
-                             padding: EdgeInsets.all(8),
-                             physics: NeverScrollableScrollPhysics(),
-                             shrinkWrap: true,
-                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-                             mainAxisSpacing: 16,
-                             crossAxisSpacing: 16,
-                             mainAxisExtent: 255
-                            ),
-                            itemCount: 5,
-                          
-                            itemBuilder: (context, index) {
+                            if(productProvider.errorMessage!=null)
+                            productProvider.isLoading
+                            ?CircularProgressIndicator()
+                            :Consumer<ProductProvider>(
+                              builder: (context, value, child) => 
+                              GridView.builder(
+                               padding: EdgeInsets.all(8),
+                               physics: NeverScrollableScrollPhysics(),
+                               shrinkWrap: true,
+                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
+                               mainAxisSpacing: 16,
+                               crossAxisSpacing: 16,
+                               mainAxisExtent: 255
+                              ),
+                              itemCount: value.products.length,
+                                                        
+                              itemBuilder: (context, index) {
+                              final product=value.products[index];
                               return
-                               HomeProductCard(imagePath: "assets/images/nike_air_max.png",
-                             label: "label", 
-                             title: "title", 
-                             price: "897");
-                            }
-                            
-                          )
+                              HomeProductCard(imagePath: product.imageUrl?? "assets/images/nike_air_max.png",
+                              label: "Best seller", 
+                              title: product.name?? "title", 
+                              price: product.price.toString()?? "897");
+                              }
+                              
+                                                        ),
+                            )
                             ],
                           ),
                         )
@@ -182,12 +193,12 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class VertiacalImage extends StatelessWidget {
+class VerticalImage extends StatelessWidget {
   final String title, image;
   final Color textColor;
   final Color? backgroundColor;
   final void Function()? onTRap;
-  const VertiacalImage({
+  const VerticalImage({
     required this.image,
     required this.title,
     this.textColor=Colors.white,
