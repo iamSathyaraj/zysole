@@ -6,6 +6,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      backgroundColor: const Color.fromARGB(255, 244, 241, 241),
       appBar: AppBar(
         title: Text("Shopping Cart", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
         actions: [
@@ -64,11 +65,26 @@ class CartScreen extends StatelessWidget {
                       Text("Nike Air Max",style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.left),
                       Text("696",style: TextStyle(fontWeight: FontWeight.bold),),
                       Row(children: [
-                        IconButton(onPressed: (){}, icon: Icon(Icons.add)),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                               color: const Color.fromARGB(255, 237, 231, 213),
+                          ),
+                       
+                          child: IconButton(onPressed: (){}, icon: Icon(Icons.add))),
+                          SizedBox(width: 10),
                         Text("-"),
-                        IconButton(onPressed: (){
+                        SizedBox(width: 10),
+                        // IconButton(onPressed: (){
               
-                        }, icon: Icon(Icons.add))
+                        // }, icon: Icon(Icons.add))
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                               color: const Color.fromARGB(255, 237, 231, 213),
+                          ),
+                       
+                          child: IconButton(onPressed: (){}, icon: Icon(Icons.add))),
                       ],)
                     ],
                   ),
@@ -94,12 +110,31 @@ class CartScreen extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-            color: Colors.amber,
+            color: const Color.fromARGB(255, 225, 223, 217),
             
 
             ),
-            child: Center(
-              child: Text("Order Summary"),
+            child: Column(
+              children: [
+                SizedBox(height: 20),
+                Center(
+                  child: Text("Order Summary",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                ),
+                Divider(color: Colors.black),
+
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Total:",style: TextStyle(fontSize: 18),),
+                      Text("789",style: TextStyle(fontSize: 18),),
+                  
+                    ],
+                  ),
+                ),
+                SizedBox( width: 180, child: ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(backgroundColor: Colors.black,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),child: Text("Checkout",style: TextStyle(color: Colors.white),)))
+              ],
             ),
           )
         ],

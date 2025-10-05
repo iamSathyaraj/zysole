@@ -80,29 +80,35 @@ User? get firebaseUser => _firebaseUser;
     _setLoading(false);
   }
   
-  // Future<void> loginUser(String email, String password) async {
-  //   try {
-  //     _setLoading(true);
-  //     UserCredential result = await _authService.loginUser(email, password);
-  //     _setLoading(false);
-  //     return result.user;
-  //   } on FirebaseAuthException catch (e) {
-  //     _setLoading(false);
-  //     _setError(e.message ?? "Login failed");
-  //     return null;
-  //   }
-  // }
+ 
+// Future<void> loginUser(String email, String password) async {
+//   try {
+//     _setLoading(true);
+//      _firebaseUser = await _authService.loginUser(email, password);
+//     _setLoading(false);
+//     notifyListeners();
+//   }  catch (e) {
+//     _setLoading(false);
+//     _setError("Login failed$e");
+//   }
+// }
 
 Future<void> loginUser(String email, String password) async {
+  _setLoading(true);
   try {
-    _setLoading(true);
-     _firebaseUser = await _authService.loginUser(email, password);
-    _setLoading(false);
-    notifyListeners();
-  }  catch (e) {
-    _setLoading(false);
-    _setError("Login failed$e");
+    _user = await _authService.loginUser(email, password);
+
+    if (_user != null) {
+      // Set the Firebase user too
+      _firebaseUser = FirebaseAuth.instance.currentUser;
+      _setError(null);
+    } else {
+      _setError("User not found");
+    }
+  } catch (e) {
+    _setError("Login failed: $e");
   }
+  _setLoading(false);
 }
 
   

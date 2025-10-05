@@ -1,4 +1,5 @@
 import 'package:e_commerce/views/cart_screen.dart';
+import 'package:e_commerce/views/favourite_screen.dart';
 import 'package:e_commerce/views/home_screen.dart';
 import 'package:e_commerce/views/login_screen.dart';
 import 'package:e_commerce/views/product_detail_screen.dart';
@@ -17,12 +18,12 @@ class _BottomNavMenuState extends State<BottomNavMenu> {
   int _selectedIndex=0;
   final List <Widget> _pages=[
     HomeScreen(),
-    LoginScreen(),
+    // LoginScreen(),
     CartScreen(),
+    FavouriteScreenUI(),
 
     // VerifyEmailScreen(),
-
-    ProductDetailScreen()
+     ProductDetailScreen()
     
   ];
   @override

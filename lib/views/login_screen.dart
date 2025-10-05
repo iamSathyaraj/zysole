@@ -18,19 +18,6 @@ import 'package:e_commerce/views/bottom_nav_menu.dart';
 
   class _LoginScreenState extends State<LoginScreen> { 
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-
-//     );
-//   }
-// }
-
-  // class LoginScreen extends StatelessWidget {
-  //   const LoginScreen({super.key});
-
-    
-
     bool _rememberMe=false;
     bool _obscurePassword = true;
 
@@ -48,15 +35,31 @@ import 'package:e_commerce/views/bottom_nav_menu.dart';
 
       //  final firebaseUser = FirebaseAuth.instance.currentUser;
         // await firebaseUser?.reload();
-         if (authProvider.firebaseUser !=null&& authProvider.user!=null) {
-         Navigator.pushReplacement(
-           context,
-          MaterialPageRoute(builder: (_) => BottomNavMenu()),
-          );
-        } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(authProvider.errorMessage!)),
+  //        if (authProvider.firebaseUser !=null&& authProvider.user!=null) {
+  //        Navigator.pushReplacement(
+  //          context,
+  //         MaterialPageRoute(builder: (_) => BottomNavMenu()),
+  //         );
+  //       } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(content: Text(authProvider.errorMessage!)),
+  //   );
+  // }
+
+
+if (authProvider.user != null) {
+  if (authProvider.user!.role == 'admin') {
+    Navigator.pushReplacementNamed(context, '/adminDashboard');
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const BottomNavMenu()),
     );
+  }
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")),
+  );
 }
 
 

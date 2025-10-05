@@ -1,4 +1,7 @@
+import 'package:e_commerce/controllers/product_provider.dart';
+import 'package:e_commerce/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AdminAddProduct extends StatelessWidget {
    AdminAddProduct({super.key});
@@ -9,6 +12,13 @@ final _formKey=GlobalKey<FormState>();
  final _categoryController = TextEditingController();
  final _quantityController = TextEditingController();
  final _descriptionController = TextEditingController();
+
+ Future<void>_saveProduct(Product product, BuildContext context)async{
+  if(_formKey.currentState!.validate()){
+    final productProviderr=Provider.of<ProductProvider>(context,listen: false);
+    productProviderr.addSingleProduct(product);
+  }
+ }
 
 
 
@@ -46,6 +56,11 @@ final _formKey=GlobalKey<FormState>();
               ),
               child: TextFormField(
                 controller: _nameController,
+                 validator: (value) {
+                 if(value==null||value.isEmpty){
+                      return "name required";
+                      }
+                }, 
                 decoration: InputDecoration(
                   border: InputBorder.none
                 ),
@@ -67,6 +82,11 @@ final _formKey=GlobalKey<FormState>();
               ),
               child: TextFormField(
                 controller: _priceController,
+                 validator: (value ) {
+                 if(value==null||value.isEmpty){
+                      return "price required";
+                      }
+                },
                 decoration: InputDecoration(
                   border: InputBorder.none
                 ),
@@ -88,6 +108,11 @@ final _formKey=GlobalKey<FormState>();
               ),
               child: TextFormField(
                 controller: _quantityController,
+                validator: (value) {
+                 if(value==null||value.isEmpty){
+                      return "quantity required";
+                      }
+                } ,
                 decoration: InputDecoration(
                   border: InputBorder.none
                 ),
@@ -111,6 +136,12 @@ final _formKey=GlobalKey<FormState>();
               ),
               child: TextFormField(
                 controller: _categoryController,
+                validator: (value) {
+                  if(value==null||value.isEmpty){
+                    return "category required";
+                  }
+                },
+                
                 decoration: InputDecoration(
                   border: InputBorder.none
                 ),

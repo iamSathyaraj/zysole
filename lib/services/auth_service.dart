@@ -44,18 +44,47 @@ final GoogleSignIn _googleSignIn = GoogleSignIn();
   }
 
 
-   Future<User?> loginUser(String email, String password) async {
-    try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+  //  Future<User?> loginUser(String email, String password) async {
+  //   try {
+  //     UserCredential result = await _auth.signInWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
 
-      return result.user;
-    }  catch (e) {
-      throw Exception("Something went wrong. Please try again.");
+  //     return result.user;
+  //   }  catch (e) {
+  //     throw Exception("Something went wrong. Please try again.");
+  //   }
+  // }
+
+  Future<AppUser?> loginUser(String email, String password) async {
+  try {
+    UserCredential result = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    User? user = result.user;
+
+    if (user != null) {
+      DocumentSnapshot doc =
+          await _firestore.collection("users").doc(user.uid).get();
+
+      if (doc.exists) {
+        return AppUser.fromMap(doc.data() as Map<String, dynamic>, user.uid);
+      } else {
+        throw Exception("User not found in Firestore");
+      }
+    } else {
+      throw Exception("User not found");
     }
+  } on FirebaseAuthException catch (e) {
+    throw Exception(e.message ?? "Login failed");
+  } catch (e) {
+    throw Exception("Login Error: $e");
   }
+}
+
 
 
     //   Future<AppUser?>loginUser(String email, String password)async{
