@@ -1,8 +1,15 @@
 import 'package:e_commerce/views/admin/admin_dashboard.dart';
+import 'package:e_commerce/views/admin/admin_product_list.dart';
+import 'package:e_commerce/views/admin/order_list.dart';
 import 'package:e_commerce/views/admin/user_management.dart';
+import 'package:e_commerce/views/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:e_commerce/controllers/auth_provider.dart' as custom_auth_provider;
 // import 'package:e_commerce_example/screens/admin_dashboard.dart';
 // import 'package:e_commerce_example/screens/user_management.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // class AdminDashboard extends StatelessWidget {
   
@@ -16,11 +23,16 @@ class AdminDashboard extends StatefulWidget {
 class _AdminDashboardState extends State<AdminDashboard> {
    final List<Widget>_screens=[
     DashboardScreen(),
-    UserManagement()
+    UserManagement(),
+    OrdersScreen(),
+    AdminProductListScreen(),
+    LoginScreen()
+    
+
   ];
  int selectedIndex=0;
 
- void onTimeTap(int index){
+ void onTapping(int index){
   setState(() {
     selectedIndex=index;
   });
@@ -50,7 +62,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               leading: Icon(Icons.dashboard),
               title: Text("Dashboard"),
               onTap: () {
-                onTimeTap(0);
+                onTapping(0);
                 Navigator.pop(context);
               },
             ),
@@ -58,46 +70,42 @@ class _AdminDashboardState extends State<AdminDashboard> {
               leading: Icon(Icons.people),
               title: Text("User Management"),
               onTap: () {
-                onTimeTap(1);
+                onTapping(1);
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: Icon(Icons.shopping_bag),
-              title: Text("Product Management"),
+              title: Text("Orders Management"),
               onTap: () {
-                onTimeTap(2);
-                Navigator.pushNamed(context, "/products");
+                onTapping(2);
+                Navigator.pop(context);
               },
             ),
             ListTile(
               leading: Icon(Icons.receipt_long),
-              title: Text("Orders"),
+              title: Text("products management"),
               onTap: () {
                
-               onTimeTap(3);
-                Navigator.pushNamed(context, "/orders");
+               onTapping(3);
+                Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text("Reports"),
-              onTap: () {
-                onTimeTap(4);
-                Navigator.pushNamed(context, "/reports");
-              },
-            ),
+          
             Divider(),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
               title: Text("Logout"),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, "/login");
+              onTap: () async{
+              
+                Navigator.pop(context);
+                await Provider.of<custom_auth_provider.AuthProvider>(context, listen: false).logout();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
               },
             ),
           ],
         ),
-      ),
+      ),  
       body: _screens[selectedIndex],
     );
   }

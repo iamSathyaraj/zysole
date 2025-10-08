@@ -1,9 +1,9 @@
   import 'package:e_commerce/controllers/auth_provider.dart';
   import 'package:e_commerce/util/theme/constants/colors.dart';
   import 'package:e_commerce/util/theme/constants/text_strings.dart';
+  import 'package:e_commerce/views/admin/admin_drawer.dart';
 import 'package:e_commerce/views/bottom_nav_menu.dart';
   import 'package:e_commerce/views/home_screen.dart';
-  import 'package:e_commerce/views/sign%20up/verify_email_screen.dart';
   import 'package:e_commerce/views/sign%20up/signup_screen.dart';
   import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
   import 'package:flutter/material.dart';
@@ -32,24 +32,9 @@ import 'package:e_commerce/views/bottom_nav_menu.dart';
           final authProvider =Provider.of<AuthProvider>(context, listen: false);
         await  authProvider.loginUser(emaiController.text.trim(), 
         passwordController.text.trim());
-
-      //  final firebaseUser = FirebaseAuth.instance.currentUser;
-        // await firebaseUser?.reload();
-  //        if (authProvider.firebaseUser !=null&& authProvider.user!=null) {
-  //        Navigator.pushReplacement(
-  //          context,
-  //         MaterialPageRoute(builder: (_) => BottomNavMenu()),
-  //         );
-  //       } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(content: Text(authProvider.errorMessage!)),
-  //   );
-  // }
-
-
-if (authProvider.user != null) {
-  if (authProvider.user!.role == 'admin') {
-    Navigator.pushReplacementNamed(context, '/adminDashboard');
+      if (authProvider.user != null) {
+       if (authProvider.user!.role == 'admin') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminDashboard()));
   } else {
     Navigator.pushReplacement(
       context,
@@ -60,30 +45,21 @@ if (authProvider.user != null) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")),
   );
-}
-
-
-        //   if(authProvider.user !=null ){
-        //     if(authProvider.user!.emailVerified){
-
-        //     Navigator.pushReplacement(context, (MaterialPageRoute(builder: (context)=>HomeScreen())));
-
-        //     }else{
-        //    Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (_) => const VerifyEmailScreen()),
-        // );
-
-        //     }
-
-        //     // if(authProvider.user!.e)
-
-        //   }
-
-         }
+}   
+     }
       }
+        @override
+  void dispose() {
+    emaiController.dispose();
+    passwordController.dispose();
+    
+    super.dispose();
+  }
+
       @override
     Widget build(BuildContext context) {
+      final authProvider = Provider.of<AuthProvider>(context);
+
        return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -245,6 +221,15 @@ if (authProvider.user != null) {
                     ),
 
                     const SizedBox(height: 15),
+                     if (authProvider.errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          authProvider.errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    const SizedBox(height: 15),
 
                     SizedBox(
                       width: double.infinity,
@@ -313,4 +298,4 @@ if (authProvider.user != null) {
     );
     }
 
-  }
+  } 

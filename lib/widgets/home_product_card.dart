@@ -1,23 +1,26 @@
-import 'package:e_commerce/widgets/common/rounded_image.dart';
+
 import 'package:flutter/material.dart';
 
 class HomeProductCard extends StatelessWidget {
-  final String imagePath;
   final String label;
   final String title;
   final String price;
+  final bool isFavourite; 
+  final VoidCallback onTap; 
+  final VoidCallback onAdd; 
 
   const HomeProductCard({
     super.key,
-    required this.imagePath,
     required this.label,
     required this.title,
     required this.price,
+    required this.isFavourite,
+    required this.onTap,
+    required this.onAdd,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool isFavourite=false;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -37,10 +40,14 @@ class HomeProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RoundedImage(
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
+                                  color: Colors.amber, 
+
+                ),
                 height: 130,
-                backgroundColor: Colors.white,
-                 imageUrl: imagePath,fit: BoxFit.contain,),
+              ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -60,10 +67,9 @@ class HomeProductCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
                       ),
-                      overflow: TextOverflow.ellipsis,
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -80,7 +86,6 @@ class HomeProductCard extends StatelessWidget {
             ],
           ),
         ),
-
         Positioned(
           bottom: 1,
           right: 2,
@@ -94,17 +99,21 @@ class HomeProductCard extends StatelessWidget {
             child: IconButton(
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.add, color: Colors.white, size: 20),
-              onPressed: () {
-              
-              },
+              onPressed: onAdd,
             ),
           ),
-        
         ),
-        IconButton(onPressed: (){
-          
-        }, icon: Icon(isFavourite ? Icons.favorite: Icons.favorite_border)),
-     
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            icon: Icon(
+              isFavourite ? Icons.favorite : Icons.favorite_border,
+              color: isFavourite ? Colors.red : Colors.grey,
+            ),
+            onPressed: onTap,
+          ),
+        ),
       ],
     );
   }

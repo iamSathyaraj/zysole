@@ -1,20 +1,30 @@
+import 'package:flutter/material.dart';
+
 class Product {
   final String id;
   final String name;
   final String description;
   final double price;
-  final String imageUrl;
+  // final String imageUrl;
   final String category;
   final int stock;
+  final String brand;
+  final Color? color;
+  final int? size;
+  // bool isFavorite;
 
   Product({
     required this.id,
     required this.name,
     required this.description,
     required this.price,
-    required this.imageUrl,
+    // required this.imageUrl,
     required this.category,
     required this.stock,
+    required this.brand,
+    this.color,
+    this.size,
+    // required this.isFavorite
   });
 
   factory Product.fromMap( Map<String, dynamic> data,String id,) {
@@ -23,9 +33,14 @@ class Product {
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       price: (data['price'] as num).toDouble(),
-      imageUrl: data['imageUrl'] ?? '',
+      // imageUrl: data['imageUrl'] ?? '',
       category: data['category'] ?? '',
       stock: data['stock'] ?? 0,
+      brand: data['brand'] ?? '',
+      color: data['color'] !=null?Color(data['color']):null,
+      size: data['size'],
+      // isFavorite: data['isFavorite']
+
     );
   }
 
@@ -34,9 +49,13 @@ class Product {
       'name': name,
       'description': description,
       'price': price,
-      'imageUrl': imageUrl,
+      // 'imageUrl': imageUrl,
       'category': category,
       'stock': stock,
+      'brand':brand,
+      'color':color?.toARGB32(),  
+      'size':size,
+      // 'isFavorite':isFavorite
     };
   }
 }

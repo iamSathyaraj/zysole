@@ -16,6 +16,8 @@ final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 // final CollectionReference _userCollection=FirebaseFirestore;
   // final 
+
+
   Future<AppUser?> signUp(AppUser appUser, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -30,9 +32,11 @@ final GoogleSignIn _googleSignIn = GoogleSignIn();
 
         AppUser newUser = AppUser(
           id: user.uid,
+          userName: appUser.userName,
           name: appUser.name,
           email: appUser.email,
           role: appUser.role,
+          phone: appUser.phone
         );
         await _firestore.collection("users").doc(user.uid).set(newUser.toMap());
         return newUser;
@@ -42,20 +46,6 @@ final GoogleSignIn _googleSignIn = GoogleSignIn();
       throw  Exception("Error in Signup $e");
     }
   }
-
-
-  //  Future<User?> loginUser(String email, String password) async {
-  //   try {
-  //     UserCredential result = await _auth.signInWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-
-  //     return result.user;
-  //   }  catch (e) {
-  //     throw Exception("Something went wrong. Please try again.");
-  //   }
-  // }
 
   Future<AppUser?> loginUser(String email, String password) async {
   try {
@@ -86,42 +76,12 @@ final GoogleSignIn _googleSignIn = GoogleSignIn();
 }
 
 
-
-    //   Future<AppUser?>loginUser(String email, String password)async{
-
-
-    //    try{
-    //        UserCredential result=await _auth.signInWithEmailAndPassword(
-    //          email: email,
-    //          password: password);
-
-    //          User? user=result.user;
-    //          if(user !=null){
-    //             throw Exception("please verify your email before login");
-    //          }
-    //          DocumentSnapshot doc = await _firestore.collection("users").doc(user!.uid).get(); 
-
-    //          if(doc.exists){
-
-    //           return AppUser.fromMap(doc.data()as Map<String, dynamic>, user.uid);
-    //          } else{
-    //           throw Exception("User not found in database");
-    //          }
-    //  }on FirebaseAuthException catch(e){
-    //    throw Exception("Login Error: ${e.message}");
-    //   // print("Login Error: ${e.message}");
-    //   // return null;
-    //  } catch (e) {
-    //   print("General Login Error: $e");
-    // }
-    // return null;
-    //   }
-
-Future<void> logout() async {
+  Future<void> logout() async {
     try {
       await _auth.signOut();
     } catch (e) {
-      print("Logout Error: $e");
+      log("Logout Error: $e");
+      throw Exception("logout error: $e");
     }
   }
 
@@ -131,10 +91,11 @@ Future<void> logout() async {
       if (user != null && !user.emailVerified) {
         await user.sendEmailVerification();
         await user.reload();
-        print("Verification email sent");
+        log("Verification email sent");
       }
     } catch (e) {
-      print("Send Email Verification Error: $e");
+      log("Send Email Verification Error: $e");
+      throw Exception("Send Email Verification Error: $e");
     }
   }
 
@@ -145,10 +106,11 @@ Future<void> logout() async {
 
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if(googleUser == null){
+      // if the user cancelled the sign in
       return null;
     }
 
-    final GoogleSignInAuthentication googleAuth=await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     final AuthCredential credential=GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
@@ -168,13 +130,21 @@ Future<void> logout() async {
               email: user.email!,
               role: 'user');
               await _firestore.collection("users").doc(user.uid).set(newUser.toMap());
+              return newUser;
           }
-      }
+      } 
+      // throw Exception("error in google sign in");
     // return result.user;
 
-    } catch (e){
+    } on FirebaseAuthException catch (e){
+      log("firebase Auth error during google sign in ${e.message}");
+      throw Exception("Google sign in filed $e");
+    }
+    
+     catch (e){
       log("error in google sign in:$e");
-      return null;
+      throw Exception("Google Sign-In failed. Please try again: $e");
+      // return null;
     }
   }
 
@@ -184,5 +154,15 @@ Future<void> logout() async {
 
     await _auth.signOut();
   }
+
+
+Future<void> updateUserProfile(AppUser updatedUser) async {
+  try {
+    await _firestore.collection('users').doc(updatedUser.id).update(updatedUser.toMap());
+  } catch (e) {
+    log("Error updating profile: $e");
+    throw Exception("Failed to update profile: $e");
+  }
+}
 
 }

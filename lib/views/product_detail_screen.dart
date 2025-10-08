@@ -1,183 +1,9 @@
-//  import 'package:flutter/material.dart';
-
-// class ProductDetailScreen extends StatefulWidget {
-//   const ProductDetailScreen({super.key});
-
-//   @override
-//   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
-// }
-
-// class _ProductDetailScreenState extends State<ProductDetailScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//      return Scaffold(
-
-//       body: SafeArea(
-//         child: Container(
-//           child: Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Column(
-//               children: [
-//                 Container(
-//                   height: 320,
-//                   width: double.infinity,
-//                   child: Image.asset("assets/images/",fit: BoxFit.contain),
-//                 ),
-//                 SizedBox(
-//                   height: 20,
-//                 ),
-//                 Expanded(
-//                   child: Container(
-//                     width: double.infinity,
-//                     decoration: BoxDecoration(
-//                          color: const Color.fromARGB(255, 50, 49, 49),
-//                       borderRadius: BorderRadius.circular(15),
-//                     ),
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.start,
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text("Nike Air Max",style: TextStyle(color: Colors.white,
-//                           fontSize: 23),),
-//                           Text("data",style: TextStyle(color: Colors.white),),
-//                           SizedBox(height: 15),
-//                           Text("sdhjsajkd ksjad kjsnb l aSNDBL NLA SNDBLNB L N BL nbe NDBLnd blN Blndb LNB NDLMNCZXCNAHDS jdf jfbsajdfbsldbf",
-//                           style: TextStyle(color: Colors.white),),
-//                           SizedBox(height: 15),
-//                           Text("Size:",style: TextStyle(color: Colors.white,fontSize: 20),),
-//                           Row(
-//                             children: [
-//                               GestureDetector(
-//                                 onTap: (){
-                               
-//                                 },
-//                                 child: Container(
-//                                   height: 50,
-//                                   width: 50,
-//                                   decoration: BoxDecoration(
-//                                     color: Colors.grey,
-//                                     borderRadius: BorderRadius.circular(10),
-//                                   ),
-//                                   child: Center(child: Text("6")),
-//                                 ),
-//                               ),
-//                               SizedBox(width: 10),
-//                               GestureDetector(
-//                                 onTap: (){
-                                 
-//                                 },
-//                                 child: Container(
-//                                   height: 50,
-//                                   width: 50,
-//                                   decoration: BoxDecoration(
-//                                     color: Colors.grey,
-//                                     borderRadius: BorderRadius.circular(10),
-//                                   ),
-//                                   child: Center(child: Text("7")),
-//                                 ),
-//                               ),
-//                               SizedBox(width: 10),
-//                               GestureDetector(
-//                                 onTap: (){
-//                                  ;
-//                                 },
-//                                 child: Container(
-//                                   height: 50,
-//                                   width: 50,
-//                                   decoration: BoxDecoration(
-//                                     color: Colors.grey,
-//                                     borderRadius: BorderRadius.circular(10),
-//                                   ),
-//                                   child: Center(child: Text("8")),
-//                                 ),
-//                               ),
-//                               SizedBox(width: 10),
-//                               GestureDetector(
-//                                 onTap: (){
-                        
-                                 
-//                                 },
-//                                 child: Container(
-//                                   height: 50,
-//                                   width: 50,
-//                                   decoration: BoxDecoration(
-//                                     color: Colors.grey,
-//                                     borderRadius: BorderRadius.circular(10),
-//                                   ),
-//                                   child: Center(child: Text("9")),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                           SizedBox(height: 15),
-//                           Row(
-//                             children: [
-//                               Text("Colors",style: TextStyle(color: Colors.white,fontSize: 19),),
-//                               SizedBox(width: 10),
-//                               Container(
-//                                 height: 25,
-//                                 width: 25,
-//                                 decoration: BoxDecoration(
-//                                   color: Colors.amber,
-//                                   borderRadius: BorderRadius.circular(400)
-//                                 ),
-//                               ),   SizedBox(width: 10),
-//                               Container(
-//                                 height: 25,
-//                                 width: 25,
-//                                 decoration: BoxDecoration(
-//                                   color: const Color.fromARGB(255, 253, 253, 252),
-//                                   borderRadius: BorderRadius.circular(400)
-//                                 ),
-//                               ),   SizedBox(width: 10),
-//                               Container(
-//                                 height: 25,
-//                                 width: 25,
-//                                 decoration: BoxDecoration(
-//                                   color: const Color.fromARGB(255, 3, 91, 7),
-//                                   borderRadius: BorderRadius.circular(400)
-//                                 ),
-//                               ),   SizedBox(width: 10),
-//                               Container(
-//                                 height: 25,
-//                                 width: 25,
-//                                 decoration: BoxDecoration(
-//                                   color: const Color.fromARGB(255, 7, 147, 255),
-//                                   borderRadius: BorderRadius.circular(400)
-//                                 ),
-//                               ),   SizedBox(width: 10),
-//                               Container(
-//                                 height: 25,
-//                                 width: 25,
-//                                 decoration: BoxDecoration(
-//                                   color: const Color.fromARGB(255, 255, 7, 40),
-//                                   borderRadius: BorderRadius.circular(400)
-//                                 ),
-//                               )
-                              
-//                             ],
-//                           )
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-          
-//         ),
-//       ),
-//     );
-//   }
-// }
-
+import 'package:e_commerce/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({Key? key}) : super(key: key);
+   final Product product;
+  const ProductDetailScreen({Key? key,required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -189,12 +15,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   final List<int> sizes = [6, 7, 8, 9, 10, 11];
   final List<Color> colors = [
-    Color(0xFFffb347), // orange
-    Color(0xFFe75480), // pink
-    Color(0xFFffcc80)  // yellowish
+    Color(0xFFffb347), 
+    Color(0xFFe75480),
+    Color(0xFFffcc80)  
   ];
 
-  // Replace with your own asset or network images
+ 
   final String mainImage = "https://i.imgur.com/6nK2MAl.png";
   final List<String> thumbImages = [
     "https://i.imgur.com/d6KcTMI.png",
@@ -208,7 +34,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       backgroundColor: const Color.fromARGB(255, 249, 248, 248),
       body: Column(
         children: [
-          // Top product image
           Expanded(
             child: Container(
               // height: 400,
@@ -258,7 +83,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ),
       
-          // Info container
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -269,7 +93,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Product name and icons
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

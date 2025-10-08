@@ -19,6 +19,7 @@ class TextConstants{
   static const String signIn="Sign In";
   static const String orSignInWith="Or Sign Up With";
   static const String orSignUpWith="Or Sign Up With";
+  static const String confirmPassword="confirm password";
   // static const String submit="submit";
 
 

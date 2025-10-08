@@ -33,13 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
             builder: (_) => LoginScreen()
           )
       );
-    // } else if (!user.emailVerified) {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //      builder: (_) => VerifyEmailScreen()
-    //     )
-    //   );
+    
     } else {
       Navigator.pushReplacement(
         context,MaterialPageRoute(
@@ -65,11 +59,6 @@ class _SplashScreenState extends State<SplashScreen> {
              ),
             ),
             
-            SizedBox(height: 20),
-            Text( 
-              'Shop Smarter',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
             SizedBox(height: 20),
             CircularProgressIndicator(),
           ],

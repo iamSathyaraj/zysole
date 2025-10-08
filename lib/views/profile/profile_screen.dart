@@ -1,84 +1,162 @@
+import 'package:e_commerce/controllers/auth_provider.dart';
+import 'package:e_commerce/views/login_screen.dart';
+import 'package:e_commerce/views/profile/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreens extends StatelessWidget {
+  const ProfileScreens({super.key});
 
   @override
   Widget build(BuildContext context) {
+     Future<void> showLogoutDialog(BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Logout"),
+        content: const Text("Are you sure want to logout?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              try {
+                await authProvider.logout();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Logout failed: $e")),
+                );
+              }
+            },
+            child: const Text("Logout"),
+          ),
+        ],
+      ),
+    );
+  }
+     final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
+
+    //  final userName = "Hello";
+    // final userEmail = "hello@gmail.com";
+
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 250, 248, 248),
       appBar: AppBar(
-         title: Text("Profile"),
-         automaticallyImplyLeading: false,
-         leading: IconButton(onPressed: (){}, icon: Icon(Icons.arrow_left)),
+        title: Text('Account Profile',style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.deepPurple,
       ),
-      body: SingleChildScrollView(
-         child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(100)
-                      ),
-                      child: Image.asset("assets/images/",fit: BoxFit.cover),
-                    ),
-                    TextButton(onPressed: (){}, child: const Text("change profile picture")
-                    ),
-                  ],
+      body: user==null? const Center(
+        child: CircularProgressIndicator(),
+      ):
+      ListView(
+        padding: EdgeInsets.all(16),
+        children: [
+          Center(
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: 
+                    user.profileImage !=null && user.profileImage!.isNotEmpty 
+                    ? NetworkImage(user.profileImage!):
+                    const AssetImage('assets/profile_placeholder.png')
                 ),
-              ),
-              SizedBox(height: 10),
-              Divider(),
-              SizedBox(height: 10),
-              Text("Profile Information"),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                   flex: 3, child: Text("Name",style: TextStyle(fontSize: 18),overflow: TextOverflow.ellipsis)),
-                  Expanded(
-                    flex: 5, child: Text("Sathyaraj", style: TextStyle(fontSize: 22),overflow: TextOverflow.ellipsis)),
-                  Expanded(child: const Icon(Icons.arrow_right)),
-                ],
-              )
+                SizedBox(height: 12),
+                Text(
+                  user.name,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  user.email,
+                  style: TextStyle(color: Colors.grey[700], fontSize: 16),
+                ),
+                SizedBox(height: 12),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreen()));
+                  },
+                  child: Text('Edit Profile',style: TextStyle(color: Colors.white),),
+                ),
+              ],
+            ),
+          ),
+          Divider(height: 40),
+          Card(
+            color: Colors.white,
+            child: Column(
+              children: [
+                  ListTile(
+              leading: Icon(Icons.history, color: Colors.deepPurple),
+              title: Text('Order History'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+              },
+            ),
+                        Divider(),
 
-            ],
+            ListTile(
+              leading: Icon(Icons.payment, color: Colors.deepPurple),
+              title: Text('Payment Methods'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+              },
+            ),
+                        Divider(),
+
+            ListTile(
+              leading: Icon(Icons.location_on, color: Colors.deepPurple),
+              title: Text('Addresses'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.notifications, color: Colors.deepPurple),
+              title: Text('Notification Settings'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+              },
+            ),
+                        Divider(),
+
+            ListTile(
+              leading: Icon(Icons.help, color: Colors.deepPurple),
+              title: Text('Support & Help'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+              },
+            ),
+              ],
+            ),
           ),
+        
+          Divider(height: 40),
+          Card(
+            color: Colors.white,
+            child: ListTile(
+              leading: Icon(Icons.logout, color: Colors.redAccent),
+              title: Text('Logout', style: TextStyle(color: Colors.redAccent)),
+              onTap: () {
+                showLogoutDialog(context);
+              },
+            ),
           ),
+        ],
       ),
-      // body: Column(
-      //   children: [
-      //     Stack(
-      //       children: [
-      //         SizedBox(
-      //           height: 150,
-      //           width: double.infinity,
-      //           child: Container(
-      //             color: Colors.blue,
-      //           ),
-                
-      //         ),
-      //         Container(
-
-      //         )
-
-      //       ],
-      //     ),
-      //     ListTile(
-      //       title: Text("Unknown Pro",style: TextStyle(fontSize: 20),),
-      //       subtitle: Text("unknown@gmail.com"),
-      //       trailing: IconButton(onPressed: (){}, icon: Icon(Icons.edit)),
-      //     )
-      //   ],
-      // ),
     );
   }
 }

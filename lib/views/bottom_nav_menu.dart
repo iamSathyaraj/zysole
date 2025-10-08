@@ -1,10 +1,11 @@
 import 'package:e_commerce/views/cart_screen.dart';
 import 'package:e_commerce/views/favourite_screen.dart';
 import 'package:e_commerce/views/home_screen.dart';
-import 'package:e_commerce/views/login_screen.dart';
+// import 'package:e_commerce/views/login_screen.dart';
 import 'package:e_commerce/views/product_detail_screen.dart';
-import 'package:e_commerce/views/sign%20up/verify_email_screen.dart';
-import 'package:e_commerce/views/sign%20up/signup_screen.dart';
+import 'package:e_commerce/views/profile/profile_screen.dart';
+// import 'package:e_commerce/views/sign%20up/verify_email_screen.dart';
+// import 'package:e_commerce/views/sign%20up/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavMenu extends StatefulWidget {
@@ -18,13 +19,9 @@ class _BottomNavMenuState extends State<BottomNavMenu> {
   int _selectedIndex=0;
   final List <Widget> _pages=[
     HomeScreen(),
-    // LoginScreen(),
+    FavoriteScreen(),
     CartScreen(),
-    FavouriteScreenUI(),
-
-    // VerifyEmailScreen(),
-     ProductDetailScreen()
-    
+    ProfileScreens()    
   ];
   @override
   Widget build(BuildContext context) {
@@ -40,7 +37,7 @@ class _BottomNavMenuState extends State<BottomNavMenu> {
         },
          destinations: const[
            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-           NavigationDestination(icon: Icon(Icons.shop), label: 'shop'),
+           NavigationDestination(icon: Icon(Icons.favorite), label: 'favourite'),
            NavigationDestination(icon: Icon(Icons.luggage), label: 'Cart'),
            NavigationDestination(icon: Icon(Icons.person), label: 'profile')
         ]

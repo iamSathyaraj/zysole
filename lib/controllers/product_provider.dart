@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/models/product_model.dart';
 import 'package:e_commerce/services/product_service.dart';
@@ -18,6 +21,12 @@ final ProductService _productService =ProductService();
  String? _erroMessage;
  String? get errorMessage=>_erroMessage;
 
+  //  Future<String> uploadImageToFirebase(File imageFile) async {
+
+    
+  //   return await _productService.uploadImageToFirebase(imageFile) ?? '';
+  // }
+
 
  void fetchProducts(){
   _productService.getProducts().listen((productsList){
@@ -34,8 +43,8 @@ notifyListeners();
 try {
   await _productService.addProduct(product);
 } catch (e) {
-  _erroMessage=e.toString();
-  print("Error adding product: $e");
+  _erroMessage= "error in adding product ${e.toString()}";
+  // log("Error adding product: $e");
 } finally {
   _isLoading = false;
   notifyListeners();
@@ -56,9 +65,9 @@ Future<void>updatetheProduct(Product product, String id)async{
   try{
     await _productService.updateProduct(id, product);
   }catch (e){
-    _erroMessage=e.toString();
-    print("error updating product");
-  }
+    _erroMessage="error in updating produc:${e.toString()}";
+    // log("error updating product");
+  } 
   finally{
     _isLoading=false;
     notifyListeners();
@@ -74,8 +83,7 @@ try{
   await _productService.deleteProduct(productId);
 
 }catch (e){
-  print("error in deleting product");
-  _erroMessage=e.toString();
+  _erroMessage="error in deleting product${e.toString()}";
 }
 finally{
   _isLoading=false;
@@ -83,12 +91,11 @@ finally{
 }
   }
 
-  Future<Product?> getProductById(String id) async {
+  Future<Product?> getProductById(String productId) async {
     try {
-      return await _productService.getProduct(id);
+      return await _productService.getProduct(productId);
     } catch (e) {
-      print("Error getting product: $e");
-      _erroMessage=e.toString();
+      _erroMessage=" error in getting single product:${e.toString()}";
       return null;
     }finally{
       _isLoading=false;

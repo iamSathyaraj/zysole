@@ -1,68 +1,23 @@
-// import 'package:flutter/material.dart';
-
-// class UserManagement extends StatelessWidget {
-
-//   final List<Map<String, String>> users=[
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"},
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"},
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"},
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"},
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"},
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"},
-//     {"name":"john", "email":"john@gmail.com", "role":"admin"}
-//   ];
-//    UserManagement({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("User Management"),
-//       ),
-//       body: ListView.builder(
-//         itemCount: users.length,
-//         itemBuilder: (context, index){
-//           final user =users[index];
-//           return Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Card(
-//               elevation: 4,
-//               child: ListTile(
-//                 leading: Icon(Icons.person,color: Colors.blue,),
-//                 title: Text(user["name"]!),
-//                 subtitle: Text(user["email"]!),
-//                 trailing:
-//                 Row(
-//                     mainAxisSize: MainAxisSize.min,
-//                     mainAxisAlignment: MainAxisAlignment.end,
-//                     children: [
-//                       IconButton(onPressed: (){},icon: Icon(Icons.edit) ),
-//                       IconButton(onPressed: (){},icon: Icon(Icons.delete) ),
-//                     ],
-//                                      ),
-//                 ),
-//             ),
-//           );
-//         }),
-//     );
-//   }
-// }
-
+import 'package:e_commerce/controllers/admin_user_provider.dart';
+import 'package:e_commerce/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserManagement extends StatelessWidget {
-  final List<Map<String, dynamic>> users = [
-    {"name": "John", "email": "john@gmail.com", "role": "Admin", "status": "active"},
-    {"name": "Alice", "email": "alice@gmail.com", "role": "User", "status": "blocked"},
-    {"name": "Bob", "email": "bob@gmail.com", "role": "User", "status": "active"},
-    {"name": "Sara", "email": "sara@gmail.com", "role": "User", "status": "active"},
-    {"name": "David", "email": "david@gmail.com", "role": "Admin", "status": "active"},
-  ];
+  // final List<Map<String, dynamic>> users = [
+  //   {"name": "John", "email": "john@gmail.com", "role": "Admin", "status": "active"},
+  //   {"name": "Alice", "email": "alice@gmail.com", "role": "User", "status": "blocked"},
+  //   {"name": "Bob", "email": "bob@gmail.com", "role": "User", "status": "active"},
+  //   {"name": "Sara", "email": "sara@gmail.com", "role": "User", "status": "active"},
+  //   {"name": "David", "email": "david@gmail.com", "role": "Admin", "status": "active"},
+  // ];
 
   UserManagement({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userProvider=Provider.of<UserProvider>(context);
+    final List<AppUser>users=userProvider.users;
     return Scaffold(
       appBar: AppBar(
         title: Text("User Management"),
@@ -79,11 +34,16 @@ class UserManagement extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
+      body:userProvider.isLoading?Center(
+        child: CircularProgressIndicator(),
+      ): users.isEmpty? const Center(
+        child: Text("No users Found"),
+      ):
+       ListView.builder(
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
-          bool isBlocked = user["status"] == "blocked";
+          bool isBlocked = user.status == "blocked";
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -92,20 +52,20 @@ class UserManagement extends StatelessWidget {
               child: ListTile(
                 leading: Icon(
                   Icons.person,
-                  color: user["role"] == "Admin" ? Colors.blue : Colors.grey,
+                  color: user.role == "Admin" ? Colors.blue : Colors.grey,
                   size: 40,
                 ),
                 title: Text(
-                  user["name"],
+                  user.name,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user["email"]),
+                    Text(user.email),
                     SizedBox(height: 4),
                     Text(
-                      "${user["role"]} • ${isBlocked ? "Blocked" : "Active"}",
+                      "${user.role} • ${isBlocked ? "Blocked" : "Active"}",
                       style: TextStyle(
                         color: isBlocked ? Colors.red : Colors.green,
                         fontWeight: FontWeight.bold,

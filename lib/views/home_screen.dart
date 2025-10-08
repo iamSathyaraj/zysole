@@ -1,239 +1,283 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:e_commerce/controllers/auth_provider.dart';
+import 'package:e_commerce/controllers/favorite_provider.dart';
 import 'package:e_commerce/controllers/product_provider.dart';
 import 'package:e_commerce/views/login_screen.dart';
+import 'package:e_commerce/views/product_detail_screen.dart';
 import 'package:e_commerce/widgets/custom_search_bar.dart';
 import 'package:e_commerce/widgets/home_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
+    final favoriteProvider =
+        Provider.of<FavoriteProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    productProvider.fetchProducts();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (authProvider.user != null) {
+        favoriteProvider.loadFavorites();
+      }
+    });
+  }
+
+  Future<void> showLogoutDialog(BuildContext context) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Logout"),
+        content: const Text("Are you sure want to logout?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              try {
+                await authProvider.logout();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Logout failed: $e")),
+                );
+              }
+            },
+            child: const Text("Logout"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final productProvider=Provider.of<ProductProvider>(context);
-    return  Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(36, 123, 209, 1),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final productProvider = Provider.of<ProductProvider>(context);
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
+
+    return Scaffold(
+        appBar: AppBar(
+    automaticallyImplyLeading: false,
+    backgroundColor: const Color.fromRGBO(36, 123, 209, 1),
+    title: Row(
+      children: [
+        Flexible(
+          child: Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              final userName = authProvider.user!.name;
+              return Text(
+                "Hello $userName",
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+                overflow: TextOverflow.ellipsis,
+              );
+            },
+          ),
+        ),
+        IconButton(
+          onPressed: () => showLogoutDialog(context),
+          icon: const Icon(Icons.logout, color: Colors.white),
+        ),
+      ],
+    ),
+     ),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-            Text("Hello User",style: TextStyle(fontWeight: FontWeight.bold),),
-            IconButton(onPressed: (){
-               final authProvider = Provider.of<AuthProvider>(context, listen: false);
-               
-        try {
-           authProvider.logout();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => LoginScreen()),
-          );
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Logout failed: $e")),
-          );
-        }
-            }, icon: Icon(Icons.logout))
+            BannerSection(),
+            const SizedBox(height: 10),
+            PopularCategoriesSection(),
+            const SizedBox(height: 20),
+            if (productProvider.isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (productProvider.errorMessage != null)
+              Center(
+                child: Text(
+                  productProvider.errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              )
+            else
+              ProductsGrid(
+                products: productProvider.products,
+                favoriteProvider: favoriteProvider,
+              ),
           ],
         ),
       ),
-      body:SingleChildScrollView(
-        
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                   color: const Color.fromRGBO(36, 123, 209, 1),  
-                   borderRadius: BorderRadius.only(
-                     bottomLeft: Radius.circular(20),
-                     bottomRight: Radius.circular(20),
-                  )
-                ),
-                height: 400,
-                          
-                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  
-                  child: Column(
-                    children:[
-                     
-                      CustomSearchBar(text: "Search",icon: Icons.search),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                        Text('Popular Categories',style: TextStyle(color: Colors.white,fontSize: 18),),
-                        SizedBox(height: 20),
-                        SizedBox(height: 100,
-                          child: ListView.builder(
-                            itemCount: 6,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index)=>
-                             VerticalImage(image: '', title: 'title')
-                             ),
-                        ),
-                      ],
-                      ),
-                    )
-                    ]
-                  ),
-                ),
-              ),
-              Padding(
-              padding: EdgeInsetsGeometry.all(5.0),
-                child: Column(
-                            children: [
-                              CarouselSlider(
-                                items: [  
-                                        Container(
-                                decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                  
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset("assets/images/banner.png",  fit: BoxFit.contain)),
-                              ),
-                                 Container(
-                                decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                  
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset("assets/images/banner.png",  fit: BoxFit.contain)),
-                              ),
-                                 Container(
-                                decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                  
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset("assets/images/banner.png",  fit: BoxFit.contain)),
-                              )
-                                ],
-                                 options: CarouselOptions(
-                                  viewportFraction: 1.0
-                                 )),
-                                 SizedBox(height: 10),
-                                 Center(
-                                   child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 20,
-                                        height: 4,
-                                        decoration: BoxDecoration(
-                                        color: Colors.green,
-                                         borderRadius: BorderRadius.circular(100)
-                                        ),
-                                      ),
-                                      Padding(padding: EdgeInsetsGeometry.all(8)),
-                                       Container(
-                                        width: 20,
-                                        height: 4,
-                                        decoration: BoxDecoration(
-                                        color: Colors.green,
-                                         borderRadius: BorderRadius.circular(100)
-                                        ),
-                                      ),
-                                                               Padding(padding: EdgeInsetsGeometry.all(8)),
-                                    Container(
-                                        width: 20,
-                                        height: 4,
-                                        decoration: BoxDecoration(
-                                        color: Colors.green,
-                                         borderRadius: BorderRadius.circular(100)
-                                        ),
-                                      ),
-                                    ],
-                                   ),
-                                 ),
-                            SizedBox(height: 20),
-                            if(productProvider.errorMessage!=null)
-                            productProvider.isLoading
-                            ?CircularProgressIndicator()
-                            :Consumer<ProductProvider>(
-                              builder: (context, value, child) => 
-                              GridView.builder(
-                               padding: EdgeInsets.all(8),
-                               physics: NeverScrollableScrollPhysics(),
-                               shrinkWrap: true,
-                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-                               mainAxisSpacing: 16,
-                               crossAxisSpacing: 16,
-                               mainAxisExtent: 255
-                              ),
-                              itemCount: value.products.length,
-                                                        
-                              itemBuilder: (context, index) {
-                              final product=value.products[index];
-                              return
-                              HomeProductCard(imagePath: product.imageUrl?? "assets/images/nike_air_max.png",
-                              label: "Best seller", 
-                              title: product.name?? "title", 
-                              price: product.price.toString()?? "897");
-                              }
-                              
-                                                        ),
-                            )
-                            ],
-                          ),
-                        )
-            ],
-          ),
-        ),
-        
-      );
-    
+    );
   }
 }
 
-class VerticalImage extends StatelessWidget {
-  final String title, image;
-  final Color textColor;
-  final Color? backgroundColor;
-  final void Function()? onTRap;
-  const VerticalImage({
-    required this.image,
-    required this.title,
-    this.textColor=Colors.white,
-    this.onTRap,
-    this.backgroundColor= const Color.fromARGB(255, 255, 255, 255),
+class ProductsGrid extends StatelessWidget {
+  final List products;
+  final FavoriteProvider favoriteProvider;
 
+  const ProductsGrid({
     super.key,
+    required this.products,
+    required this.favoriteProvider,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Padding(
-        padding: const EdgeInsets.only(right: 12),
-        child: Column(
-          children: [
-            Container(
-             height: 60,
-             width: 60,
-            padding: EdgeInsets.all(8),
-             decoration: BoxDecoration(color: Colors.white,
-               borderRadius: BorderRadius.circular(100)),
-                child: Center(child: Image(image: AssetImage(image),fit: BoxFit.cover,)),
-                                            ),
-            SizedBox(height: 5),
-            SizedBox(
-              width: 55,
-              child: Text(title,
-              style: TextStyle(color: textColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis),
-            )
-        
-          ], 
+    if (products.isEmpty) return const Center(child: Text("No products available"));
+
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: products.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          mainAxisExtent: 255,
         ),
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final isFav = favoriteProvider.isFavorite(product.id);
+
+          return HomeProductCard(
+            label: "Best Seller",
+            title: product.name,
+            price: product.price.toString(),
+            isFavourite: isFav,
+            onTap: () {
+              favoriteProvider.toggleFavorite(product.id);
+            },
+            onAdd: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(product: product)));
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class PopularCategoriesSection extends StatelessWidget {
+  final List<Map<String, String>> categories = [
+    {'image': 'assets/images/shoes.png', 'title': 'Nike'},
+    {'image': 'assets/images/clothes.png', 'title': 'Adidas'},
+    {'image': 'assets/images/accessories.png', 'title': 'puma'},
+    {'image': 'assets/images/sports.png', 'title': 'Sports'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Text('Popular Categories',
+             style: TextStyle(color: Colors.black87,
+              fontSize: 18)),
+          ),
+          const SizedBox(height: 15),
+          SizedBox(
+            height: 100,
+            child: ListView.builder(
+              itemCount: categories.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                
+                return _VerticalCategoryCard(
+                  image: category['image']!,
+                   title: category['title']!);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VerticalCategoryCard extends StatelessWidget {
+  final String image;
+  final String title;
+
+  const _VerticalCategoryCard({required this.image, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: Column(
+        children: [
+          Container(
+            height: 60,
+            width: 60,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
+            child: Center(child: Image.asset(image, fit: BoxFit.cover)),
+          ),
+          const SizedBox(height: 5),
+          SizedBox(
+            width: 55,
+            child: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.black87)),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+class BannerSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(36, 123, 209, 1),
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),
+         bottomRight: Radius.circular(20)),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          const CustomSearchBar(text: "Search", icon: Icons.search),
+          const SizedBox(height: 20),
+          CarouselSlider(
+            items: List.generate(
+              3,
+              (index) => ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset("assets/images/banner.png",
+                 fit: BoxFit.contain, width: double.infinity),
+              ),
+            ),
+            options: CarouselOptions(viewportFraction: 1.0,
+             autoPlay: true,
+              height: 150),
+          ),
+        ],
       ),
     );
   }
