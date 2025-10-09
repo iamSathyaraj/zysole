@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:e_commerce/models/order_model.dart';
-import 'package:e_commerce/services/order_service.dart';
+import 'package:e_commerce/admin/models/order_model.dart';
+import 'package:e_commerce/admin/services/order_service.dart';
 
 class OrderProvider extends ChangeNotifier {
   final OrderService _orderService = OrderService();

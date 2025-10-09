@@ -21,13 +21,13 @@ class AppUser{
 
   factory AppUser.fromMap(Map<String, dynamic>data, String id){
     return AppUser(id: id,
-    userName: data['userName'],
-     name: data['name'],
-      email: data['email'],
-      phone: data['phone'],
-      profileImage: data['profileImage'],
-      role: data['role'],
-      status: data['status']
+    userName: data['userName']?? " ",
+     name: data['name']?? '',
+      email: data['email']?? ' ',
+      phone: data['phone']?? ' ',
+      profileImage: data['profileImage']?? ' ',
+      role: data['role']?? 'user',
+      status: data['status']?? 'Active'
       );
   }
 

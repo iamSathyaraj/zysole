@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce/models/product_model.dart';
-import 'package:e_commerce/services/product_service.dart';
+import 'package:e_commerce/admin/models/product_model.dart';
+import 'package:e_commerce/admin/services/product_service.dart';
 import 'package:flutter/material.dart';
 
 class ProductProvider extends ChangeNotifier{
@@ -31,6 +31,7 @@ final ProductService _productService =ProductService();
  void fetchProducts(){
   _productService.getProducts().listen((productsList){
     _products =productsList;
+    
     notifyListeners();
   });
  }
@@ -38,10 +39,12 @@ final ProductService _productService =ProductService();
 
   Future<void>addSingleProduct(Product product)async{
    _isLoading = true;
-notifyListeners();
+   notifyListeners();
 
 try {
   await _productService.addProduct(product);
+  fetchProducts();
+  notifyListeners();
 } catch (e) {
   _erroMessage= "error in adding product ${e.toString()}";
   // log("Error adding product: $e");

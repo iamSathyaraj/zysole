@@ -1,10 +1,11 @@
-  import 'package:e_commerce/controllers/auth_provider.dart';
-  import 'package:e_commerce/util/theme/constants/colors.dart';
-  import 'package:e_commerce/util/theme/constants/text_strings.dart';
-  import 'package:e_commerce/views/admin/admin_drawer.dart';
-import 'package:e_commerce/views/bottom_nav_menu.dart';
-  import 'package:e_commerce/views/home_screen.dart';
-  import 'package:e_commerce/views/sign%20up/signup_screen.dart';
+  import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce/controllers/auth_provider.dart';
+  import 'package:e_commerce/core/constants/colors.dart';
+  import 'package:e_commerce/core/constants/text_strings.dart';
+  import 'package:e_commerce/admin/views/admin_drawer.dart';
+import 'package:e_commerce/user/views/bottom_nav_menu.dart';
+  import 'package:e_commerce/user/views/home_screen.dart';
+  import 'package:e_commerce/auth/sign%20up/signup_screen.dart';
   import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
   import 'package:flutter/material.dart';
   import 'package:provider/provider.dart';
@@ -25,29 +26,105 @@ import 'package:e_commerce/views/bottom_nav_menu.dart';
 
     TextEditingController emaiController =TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    Future<void> _login() async {
+  if (_formKey.currentState!.validate()) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    Future<void>_login()async{
-        if(_formKey.currentState!.validate()){
+    try {
+      // Step 1: Attempt login
+      await authProvider.loginUser(
+        emaiController.text.trim(),
+        passwordController.text.trim(),
+      );
 
-          final authProvider =Provider.of<AuthProvider>(context, listen: false);
-        await  authProvider.loginUser(emaiController.text.trim(), 
-        passwordController.text.trim());
-      if (authProvider.user != null) {
-       if (authProvider.user!.role == 'admin') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminDashboard()));
-  } else {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const BottomNavMenu()),
-    );
-  }
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")),
-  );
-}   
-     }
+      // Step 2: Check if login was successful
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Login failed: No user found")),
+        );
+        return;
       }
+
+      // Step 3: Fetch user data from Firestore
+      final userDoc = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("User record not found")),
+        );
+        return;
+      }
+
+      final userData = userDoc.data()!;
+      final role = userData['role'] ?? 'user';
+
+      // Step 4: Navigate based on role
+      if (role == 'admin') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AdminDashboard()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const BottomNavMenu()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login failed: ${e.toString()}")),
+      );
+    }
+  }
+}
+
+
+//     Future<void>_login()async{
+//     if(_formKey.currentState!.validate()){
+//                 final authProvider =Provider.of<AuthProvider>(context, listen: false);
+
+//        User? user=FirebaseAuth.instance.currentUser;
+//         if(user!=null){
+//         final userDocs=await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+//            if(userDocs.exists){
+//             final userData=userDocs.data()!;
+//             final role=userData['role'] ??'user';
+//             if(role=='admin'){
+//             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminDashboard()));
+
+//             }else if(role=="user"){
+//             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavMenu()));
+
+//             }
+
+//            }
+
+//         }
+
+//         await  authProvider.loginUser(emaiController.text.trim(), 
+//         passwordController.text.trim());
+//       if (authProvider.user!= null) {
+//        if (
+
+//         // authProvider.user!.role == 'admin'
+//         ) {
+//   } else {
+//     Navigator.pushReplacement(
+//       context,
+//       MaterialPageRoute(builder: (_) => const BottomNavMenu()),
+//     );
+//   }
+// } else {
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")),
+//   );
+// }   
+//      }
+//       }
         @override
   void dispose() {
     emaiController.dispose();

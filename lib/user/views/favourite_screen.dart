@@ -1,6 +1,6 @@
 
 import 'package:e_commerce/controllers/favorite_provider.dart';
-import 'package:e_commerce/controllers/product_provider.dart';
+import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/widgets/home_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

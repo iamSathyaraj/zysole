@@ -1,8 +1,8 @@
-import 'package:e_commerce/views/cart_screen.dart';
-import 'package:e_commerce/views/favourite_screen.dart';
-import 'package:e_commerce/views/home_screen.dart';
+import 'package:e_commerce/user/views/cart_screen.dart';
+import 'package:e_commerce/user/views/favourite_screen.dart';
+import 'package:e_commerce/user/views/home_screen.dart';
 // import 'package:e_commerce/views/login_screen.dart';
-import 'package:e_commerce/views/product_detail_screen.dart';
+import 'package:e_commerce/user/views/product_detail_screen.dart';
 import 'package:e_commerce/views/profile/profile_screen.dart';
 // import 'package:e_commerce/views/sign%20up/verify_email_screen.dart';
 // import 'package:e_commerce/views/sign%20up/signup_screen.dart';
@@ -21,7 +21,8 @@ class _BottomNavMenuState extends State<BottomNavMenu> {
     HomeScreen(),
     FavoriteScreen(),
     CartScreen(),
-    ProfileScreens()    
+    ProfileScreens(),
+    // ProductDetailScreen(productId: ,)   
   ];
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,9 @@ class _BottomNavMenuState extends State<BottomNavMenu> {
            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
            NavigationDestination(icon: Icon(Icons.favorite), label: 'favourite'),
            NavigationDestination(icon: Icon(Icons.luggage), label: 'Cart'),
-           NavigationDestination(icon: Icon(Icons.person), label: 'profile')
+           NavigationDestination(icon: Icon(Icons.person), label: 'profile'),
+          // NavigationDestination(icon: Icon(Icons.person), label: 'profile')
+
         ]
         ),
     );

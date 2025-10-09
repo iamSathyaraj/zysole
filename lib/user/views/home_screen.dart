@@ -1,8 +1,10 @@
+import 'package:e_commerce/admin/models/product_model.dart';
 import 'package:e_commerce/controllers/auth_provider.dart';
 import 'package:e_commerce/controllers/favorite_provider.dart';
-import 'package:e_commerce/controllers/product_provider.dart';
-import 'package:e_commerce/views/login_screen.dart';
-import 'package:e_commerce/views/product_detail_screen.dart';
+import 'package:e_commerce/admin/controllers/product_provider.dart';
+import 'package:e_commerce/auth/login_screen.dart';
+import 'package:e_commerce/user/views/cart_screen.dart';
+import 'package:e_commerce/user/views/product_detail_screen.dart';
 import 'package:e_commerce/widgets/custom_search_bar.dart';
 import 'package:e_commerce/widgets/home_product_card.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ProductsGrid extends StatelessWidget {
-  final List products;
+  final List<Product> products;
   final FavoriteProvider favoriteProvider;
 
   const ProductsGrid({
@@ -155,20 +157,31 @@ class ProductsGrid extends StatelessWidget {
           mainAxisExtent: 255,
         ),
         itemBuilder: (context, index) {
-          final product = products[index];
-          final isFav = favoriteProvider.isFavorite(product.id);
+          final producted = products[index];
+          final isFav = favoriteProvider.isFavorite(producted.id);
 
-          return HomeProductCard(
-            label: "Best Seller",
-            title: product.name,
-            price: product.price.toString(),
-            isFavourite: isFav,
-            onTap: () {
-              favoriteProvider.toggleFavorite(product.id);
+          return GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(productId: producted.id)));
             },
-            onAdd: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(product: product)));
-            },
+            // child: ModernProductCard(
+            //   title: producted.name,
+            //    price: producted.price.toString(),
+            //     label: 'best seller',
+            //      isFavorite: isFav, onFavorite: favoriteProvider.toggleFavorite(producted.id), onAdd: (){}),
+            child: HomeProductCard(
+              label: "Best Seller",
+              title: producted.name,
+              price: producted.price.toString(),
+              isFavourite: isFav,
+              onTap: () {
+                favoriteProvider.toggleFavorite(producted.id);
+              },
+              onAdd: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
+              },
+            ),
+
           );
         },
       ),

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:e_commerce/controllers/product_provider.dart';
-import 'package:e_commerce/models/product_model.dart';
+import 'package:e_commerce/admin/controllers/product_provider.dart';
+import 'package:e_commerce/admin/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +13,12 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
-  String productName = '';
-  String description = '';
-  double price = 0.0;
+  String? productName ;
+  String? description ;
+  double? price ;
+  String? brand;
   // double discount = 0.0;
-  int stockQuantity = 0;
+  int? stockQuantity ;
   bool isActive = true;
   File? _pickedImage; 
 
@@ -43,6 +44,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
     Colors.purple,
   ];
 
+//  final TextEditingController nameController=TextEditingController();
+//   final TextEditingController brandController=TextEditingController();
+//  final TextEditingController descController=TextEditingController();
+//  final TextEditingController priceController=TextEditingController();
+//  final TextEditingController stockController=TextEditingController();
+//  final TextEditingController szeController=TextEditingController();
+//   final TextEditingController colorController=TextEditingController();
+
+
+
 
   // Future<void> _pickImage() async {
   //   final ImagePicker _picker = ImagePicker();
@@ -58,24 +69,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
     final productProvider = Provider.of<ProductProvider>(context, listen: false);
     if (_formKey.currentState!.validate()) {
 
+
 //       if(_pickedImage==null){
 // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please pick an image"),));
 // return;
 
 //       }
-      // _formKey.currentState!.save();
+      _formKey.currentState!.save();
       // String imageUrl=await productProvider.uploadImageToFirebase(_pickedImage!);
 
       final product=Product(
         id: '',
-         name: productName,
-         description: description,
-          price: price,
+         name: productName!,
+         description: description!,
+          price: price!,
           
           //  imageUrl: imageUrl,
             category: selectedCategory ?? '',
-             stock: stockQuantity,
-              brand: '',
+             stock: stockQuantity!,
+              brand: brand!, 
               color: selectedColor,
               size: selectedSize,
               // isFavorite: 
@@ -112,13 +124,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTextField('Product Name', onSaved: (val) => productName = val!, validator: _requiredValidator),
+                  // TextFormField(
+                  //   controller: nameController,
+                  // ),
                   SizedBox(height: 16),
                   _buildDropdown(),
                   SizedBox(height: 16),
                   _buildTextField('Description', maxLines: 4, onSaved: (val) => description = val ?? ''),
                   SizedBox(height: 16),
                   _buildTextField('Price', keyboardType: TextInputType.number, onSaved: (val) => price = double.parse(val!), validator: _numberValidator),
-                  SizedBox(height: 16),
+                  SizedBox(height: 16), 
                   // _buildTextField('Discount', keyboardType: TextInputType.number, onSaved: (val) => discoun = double.tryParse(val ?? '') ?? 0.0),
                   SizedBox(height: 16),
                   _buildTextField('Stock Quantity', keyboardType: TextInputType.number, onSaved: (val) => stockQuantity = int.parse(val!), validator: _intValidator),
@@ -222,6 +237,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
+  // Widget _customTextField(String label,)
+
   Widget _buildTextField(String label,
       {int maxLines = 1,
       required FormFieldSetter<String> onSaved,
@@ -248,7 +265,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
       items: categories
           .map((category) => DropdownMenuItem(value: category, child: Text(category)))
           .toList(),
-      onChanged: (value) => setState(() => selectedCategory = value),
+      onChanged: (value) => setState(() { selectedCategory = value;
+      brand=value;}
+      ),
       validator: (value) => value == null ? 'Please select a category' : null,
     );
   }

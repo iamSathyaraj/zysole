@@ -1,9 +1,30 @@
-import 'package:e_commerce/controllers/admin_user_provider.dart';
-import 'package:e_commerce/models/user_model.dart';
+import 'package:e_commerce/admin/controllers/admin_user_provider.dart';
+import 'package:e_commerce/user/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UserManagement extends StatelessWidget {
+class UserManagement extends StatefulWidget {
+  const UserManagement({super.key});
+
+  @override
+  State<UserManagement> createState() => _UserManagementState();
+}
+
+class _UserManagementState extends State<UserManagement> {
+
+  @override
+  void initState() {
+    super.initState();
+ Future.microtask(() =>
+        Provider.of<UserProvider>(context, listen: false).fetchUsers()); 
+         }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return const Placeholder();
+  // }
+// }
+
+// class UserManagement extends StatelessWidget {
   // final List<Map<String, dynamic>> users = [
   //   {"name": "John", "email": "john@gmail.com", "role": "Admin", "status": "active"},
   //   {"name": "Alice", "email": "alice@gmail.com", "role": "User", "status": "blocked"},
@@ -12,14 +33,15 @@ class UserManagement extends StatelessWidget {
   //   {"name": "David", "email": "david@gmail.com", "role": "Admin", "status": "active"},
   // ];
 
-  UserManagement({super.key});
+  // UserManagement({super.key});
 
   @override
   Widget build(BuildContext context) {
     final userProvider=Provider.of<UserProvider>(context);
-    final List<AppUser>users=userProvider.users;
+    final List<AppUser>userss=userProvider.users;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text("User Management"),
         actions: [
           IconButton(
@@ -34,15 +56,15 @@ class UserManagement extends StatelessWidget {
           ),
         ],
       ),
-      body:userProvider.isLoading?Center(
+      body:userProvider.isLoading ? Center(
         child: CircularProgressIndicator(),
-      ): users.isEmpty? const Center(
+      ): userss.isEmpty? const Center(
         child: Text("No users Found"),
       ):
        ListView.builder(
-        itemCount: users.length,
+        itemCount: userss.length,
         itemBuilder: (context, index) {
-          final user = users[index];
+          final user = userss[index];
           bool isBlocked = user.status == "blocked";
 
           return Padding(

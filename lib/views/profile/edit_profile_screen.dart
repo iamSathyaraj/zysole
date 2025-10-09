@@ -1,5 +1,5 @@
 import 'package:e_commerce/controllers/auth_provider.dart';
-import 'package:e_commerce/models/user_model.dart';
+import 'package:e_commerce/user/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -79,14 +79,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     value == null || value.isEmpty ? "Enter your name" : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-                validator: (value) =>
-                    value == null || !value.contains("@")
-                        ? "Enter a valid email"
-                        : null,
-              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _phoneController,

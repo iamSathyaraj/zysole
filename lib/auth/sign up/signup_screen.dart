@@ -1,9 +1,9 @@
 
 
-import 'package:e_commerce/models/user_model.dart';
-import 'package:e_commerce/util/theme/constants/text_strings.dart';
-import 'package:e_commerce/views/bottom_nav_menu.dart';
-import 'package:e_commerce/views/login_screen.dart';
+import 'package:e_commerce/user/user_model.dart';
+import 'package:e_commerce/core/constants/text_strings.dart';
+import 'package:e_commerce/user/views/bottom_nav_menu.dart';
+import 'package:e_commerce/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:e_commerce/controllers/auth_provider.dart';

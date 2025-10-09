@@ -1,8 +1,8 @@
 
 import 'package:e_commerce/controllers/cart_provider.dart';
 import 'package:e_commerce/models/cart_model.dart';
-import 'package:e_commerce/views/bottom_nav_menu.dart';
-import 'package:e_commerce/views/home_screen.dart';
+import 'package:e_commerce/user/views/bottom_nav_menu.dart';
+import 'package:e_commerce/user/views/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

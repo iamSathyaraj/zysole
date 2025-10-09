@@ -1,10 +1,10 @@
-import 'package:e_commerce/controllers/admin_user_provider.dart';
+import 'package:e_commerce/admin/controllers/admin_user_provider.dart';
 import 'package:e_commerce/controllers/auth_provider.dart';
 import 'package:e_commerce/controllers/cart_provider.dart';
 import 'package:e_commerce/controllers/favorite_provider.dart';
-import 'package:e_commerce/controllers/product_provider.dart';
+import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/firebase_options.dart';
-import 'package:e_commerce/views/splash_screen.dart';
+import 'package:e_commerce/user/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

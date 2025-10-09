@@ -1,4 +1,4 @@
-import 'package:e_commerce/util/theme/text_theme.dart';
+import 'package:e_commerce/core/util/theme/text_theme.dart';
 import 'package:flutter/material.dart';
 
 class TAppTheme {

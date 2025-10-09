@@ -1,15 +1,22 @@
-import 'package:e_commerce/models/product_model.dart';
+import 'package:e_commerce/admin/controllers/product_provider.dart';
+import 'package:e_commerce/admin/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-   final Product product;
-  const ProductDetailScreen({Key? key,required this.product});
+   final String productId;
+  const ProductDetailScreen({Key? key,
+  required this.productId
+  });
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  Product?product;
+
+
   int selectedSize = 8;
   int selectedColor = 0;
 
@@ -28,62 +35,88 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     "https://i.imgur.com/d6KcTMI.png",
   ];
 
+void fetchProduct() async{
+  final productProvider=Provider.of<ProductProvider>(context,listen: false);
+   Product? fetchedProduct= await productProvider.getProductById(widget.productId);
+
+   if(fetchedProduct!=null){
+    setState(() {
+      product=fetchedProduct;
+    });
+   }  
+}
+
+@override
+  void initState() {
+    super.initState();
+    fetchProduct();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if(product==null){
+      return Scaffold(
+       body: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 249, 248, 248),
-      body: Column(
+      body: 
+      
+      Column(
         children: [
           Expanded(
-            child: Container(
-              // height: 400,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  SizedBox(height: 35),
-                  Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey[200],
-                      ),
-                      padding: EdgeInsets.all(16),
-                      margin: EdgeInsets.only(top: 16, bottom: 16),
-                      child: Image.network(
-                        mainImage,
-                        width: 220,
-                        fit: BoxFit.contain,
+            child: SingleChildScrollView(
+              child: Container(
+                // height: 400,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    SizedBox(height: 35),
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey[200],
+                        ),
+                        padding: EdgeInsets.all(16),
+                        margin: EdgeInsets.only(top: 16, bottom: 16),
+                        child: Image.network(
+                          mainImage,
+                          width: 220,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ...thumbImages.map((img) => Container(
-                        margin: EdgeInsets.symmetric(horizontal: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[300]!,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Image.network(img, height: 48, width: 70, fit: BoxFit.contain),
-                      )),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                ],
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ...thumbImages.map((img) => Container(
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey[300]!,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Image.network(img, height: 48, width: 70, fit: BoxFit.contain),
+                        )),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                ),
               ),
             ),
           ),
       
-          Expanded(
+          SingleChildScrollView(
             child: Container(
               decoration: BoxDecoration(
                 color: Color(0xFF22232A),
@@ -93,12 +126,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  GestureDetector(
+              child: Divider(
+                      thickness: 3,
+                      indent: 120,
+                      endIndent: 120,
+                    ),
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text(
-                          "Nike Air Max 270",
+                        child: Text(product!.name,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -121,8 +160,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     style: TextStyle(color: Colors.grey[400], fontSize: 13),
                   ),
                   SizedBox(height: 18),
-                  Text(
-                    "the nike free metcon 3 combines nike free flexibility around the forefoot with metcon stability in the heel to help you get the most out of your training session",
+                  Text(product!.description,
                     style: TextStyle(color: Colors.grey[400], fontSize: 13),
                   ),
                   SizedBox(height: 24),
@@ -194,7 +232,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             style: TextStyle(color: Colors.white, fontSize: 15),
                           ),
                           Text(
-                            "\$290.00",
+                            product!.price.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
