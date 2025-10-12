@@ -3,6 +3,7 @@ import 'package:e_commerce/controllers/cart_provider.dart';
 import 'package:e_commerce/models/cart_model.dart';
 import 'package:e_commerce/user/views/bottom_nav_menu.dart';
 import 'package:e_commerce/user/views/home_screen.dart';
+import 'package:e_commerce/user/views/order_placed_congrats_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +56,7 @@ body: Consumer<CartProvider>(
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
+                  border: Border.all(color: const Color.fromARGB(255, 255, 221, 0)),
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -88,7 +90,7 @@ body: Consumer<CartProvider>(
                       width: 180,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavMenu()));  
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderPlacedCongratsScreen()));  
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,

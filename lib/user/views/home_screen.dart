@@ -85,12 +85,18 @@ class _HomeScreenState extends State<HomeScreen> {
         Flexible(
           child: Consumer<AuthProvider>(
             builder: (context, authProvider, child) {
-              final userName = authProvider.user!.name;
-              return Text(
-                "Hello $userName",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white),
-                overflow: TextOverflow.ellipsis,
+              final userName = authProvider.user?.name??'User';
+              return Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Hello $userName",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               );
             },
           ),

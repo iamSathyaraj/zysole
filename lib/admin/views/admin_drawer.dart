@@ -39,11 +39,37 @@ class _AdminDashboardState extends State<AdminDashboard> {
  }
 
 
+ Future<void>showLogoutDialogue()async{
+  await showDialog(context: context, builder: (context)=>AlertDialog(
+    title: Column(
+      children: [
+        Text("Logout"),
+        Divider()
+      ],
+    ),
+    content: Text("Are you sure want to logout"),
+    actions: [
+      ElevatedButton(onPressed: (){
+        Navigator.pop(context);
+      }, child: Text("Cancel")),
+            ElevatedButton(onPressed: (){
+               Navigator.pop(context);
+                 Provider.of<custom_auth_provider.AuthProvider>(context, listen: false).logout();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+            }, child: Text("Add")),
+
+    ],
+  )
+  );
+ }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       drawer: Drawer(
+        backgroundColor: const Color.fromARGB(255, 250, 251, 250),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -66,7 +92,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
+            ListTile( 
               leading: Icon(Icons.people),
               title: Text("User Management"),
               onTap: () {
@@ -96,11 +122,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
               title: Text("Logout"),
-              onTap: () async{
-              
-                Navigator.pop(context);
-                await Provider.of<custom_auth_provider.AuthProvider>(context, listen: false).logout();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+              onTap: () {
+              showLogoutDialogue();
               },
             ),
           ],

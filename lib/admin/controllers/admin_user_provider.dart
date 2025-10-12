@@ -12,7 +12,7 @@ class UserProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future<void> fetchUsers() async {
-    _isLoading = true;
+    _isLoading = true; 
     notifyListeners();
 
     try {
@@ -48,4 +48,16 @@ class UserProvider extends ChangeNotifier {
       debugPrint("Error toggling block status: $e");
     }
   }
+  Future<AppUser?> fetchUserById(String userId) async {
+  try {
+    DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
+    if (doc.exists) {
+      return AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    }
+  } catch (e) {
+    debugPrint('Error fetching user by id: $e');
+  }
+  return null;
+}
+
 }

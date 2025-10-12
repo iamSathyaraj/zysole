@@ -2,7 +2,10 @@
 import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/admin/models/product_model.dart';
 import 'package:e_commerce/admin/views/product/admin_edit_product.dart';
+import 'package:e_commerce/admin/views/product/admin_product_detail_rogh.dart';
 import 'package:e_commerce/admin/views/product/admin_product_list.dart';
+import 'package:e_commerce/user/views/newscreen.dart';
+import 'package:e_commerce/user/views/users_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,14 +25,16 @@ class DashboardScreen extends StatelessWidget {
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
         children: [
-          GestureDetector(onTap:(){Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminAddProduct()));
+          GestureDetector(onTap:(){Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminEditProduct()));
           },child:  _buildStatCard("Add Products", "120", Icons.add)),
           GestureDetector(onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminProductListScreen()));
           }, child: _buildStatCard("Total Products", productProvider.products.length.toString() , Icons.shopping_bag)),
           _buildStatCard("Orders Pending", "15", Icons.pending_actions),
           _buildStatCard("Revenue", "\$12,340", Icons.attach_money),
-          _buildStatCard("Users", "350", Icons.people),
+          GestureDetector(onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>UserManagementScreen()));
+          }, child: _buildStatCard("Users", "350", Icons.people)),
         ], 
       ),
     );

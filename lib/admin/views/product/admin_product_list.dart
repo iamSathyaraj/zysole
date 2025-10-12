@@ -1,5 +1,6 @@
 import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/admin/views/product/admin_add_product.dart';
+import 'package:e_commerce/admin/views/product/admin_product_detail_rogh.dart';
 import 'package:e_commerce/user/views/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,8 @@ class _AdminProductListScreenState extends State<AdminProductListScreen> {
     final productProvider = Provider.of<ProductProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Products')),
+      appBar: AppBar(automaticallyImplyLeading: false,
+        title: Text('Products')),
       body: productProvider.isLoading
           ? Center(child: CircularProgressIndicator())
           : productProvider.products.isEmpty
@@ -33,7 +35,7 @@ class _AdminProductListScreenState extends State<AdminProductListScreen> {
 
                     return GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetailScreen(productId: product.id,
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminProductDetailScreen(productId: product.id,
                           // product: product
                           )));
                       },

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/user/user_model.dart';
@@ -29,6 +30,22 @@ class AuthProvider extends ChangeNotifier {
     _errorMessage = message;
     notifyListeners();
   }
+  Future<void> fetchCurrentUser() async {
+  final firebaseUser = FirebaseAuth.instance.currentUser;
+  if (firebaseUser != null) {
+    final doc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser.uid)
+        .get();
+
+    if (doc.exists) {
+      _user = AppUser.fromMap(doc.data() as Map<String, dynamic>, firebaseUser.uid);
+      _firebaseUser = firebaseUser;
+      notifyListeners();
+    }
+  }
+}
+
 
   
   Future<void> signUpUser(AppUser appUser, String password) async {
