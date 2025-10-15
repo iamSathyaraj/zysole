@@ -1,4 +1,8 @@
 
+// import 'dart:math';
+import 'dart:developer';
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/models/cart_model.dart';
 
@@ -13,7 +17,7 @@ class CartService {
           .doc(item.id)
           .set(item.toMap());
     } catch (e) {
-      print('Error adding to cart: $e');
+      log('Error adding to cart: $e');
       rethrow;
     }
   }
@@ -25,7 +29,7 @@ class CartService {
           .doc(item.id)
           .update(item.toMap());
     } catch (e) {
-      print('Error updating cart item: $e');
+      log('Error updating cart item: $e');
       rethrow;
     }
   }
@@ -34,7 +38,7 @@ class CartService {
     try {
       await _firestore.collection(_cartCollection).doc(cartItemId).delete();
     } catch (e) {
-      print('Error removing cart item: $e');
+      log('Error removing cart item: $e');
       rethrow;
     }
   }

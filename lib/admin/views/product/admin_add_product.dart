@@ -1,10 +1,15 @@
 import 'dart:io';
+// import 'dart:math';
 
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/admin/models/product_model.dart';
+import 'package:e_commerce/controllers/category_provider.dart';
+import 'package:e_commerce/controllers/supabse_image_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 
 class AddProductScreen extends StatefulWidget {
   @override
@@ -12,17 +17,68 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
+
+  final TextEditingController categoryController=TextEditingController();
+
+
+Future<void> _pickImage() async {
+
+  showModalBottomSheet(
+    context: context, builder: (context){
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Wrap(
+          
+          children: [
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text("pick image from gallery"),
+              onTap: () {
+                Navigator.pop(context);
+               _pickImageSource(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+                 leading: Icon(Icons.photo_camera),
+                 title: Text("pick image through camera"),
+                 onTap: (){
+                  Navigator.pop(context);
+                  _pickImageSource(ImageSource.camera);
+                 },
+            )
+          ],
+        
+        ),
+      ),
+    );
+  });
+  
+}
+
+Future<void>_pickImageSource(ImageSource source)async{
+
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: source);
+if (pickedFile != null) {
+    setState(() {
+      _pickedImage = File(pickedFile.path);
+    });
+  }
+
+}
+
+
   final _formKey = GlobalKey<FormState>();
   String? productName ;
   String? description ;
   double? price ;
   String? brand;
-  // double discount = 0.0;
   int? stockQuantity ;
   bool isActive = true;
   File? _pickedImage; 
 
-  final List<String> categories = ['nike', 'adidas', 'puma'];
+  final List<String> categories = [];
   String? selectedCategory;
 
   final Map<String, bool> sizes = {
@@ -44,70 +100,57 @@ class _AddProductScreenState extends State<AddProductScreen> {
     Colors.purple,
   ];
 
-//  final TextEditingController nameController=TextEditingController();
-//   final TextEditingController brandController=TextEditingController();
-//  final TextEditingController descController=TextEditingController();
-//  final TextEditingController priceController=TextEditingController();
-//  final TextEditingController stockController=TextEditingController();
-//  final TextEditingController szeController=TextEditingController();
-//   final TextEditingController colorController=TextEditingController();
+void _submitForm() async {
+  final enteredCategory = categoryController.text.trim();
 
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
 
+    final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
 
-
-  // Future<void> _pickImage() async {
-  //   final ImagePicker _picker = ImagePicker();
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-  //   if (image != null) {
-  //     setState(() {
-  //       _pickedImage = File(image.path);
-  //     });
-  //   }
-  // }
-
-  void _submitForm() async{ 
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
-    if (_formKey.currentState!.validate()) {
-
-
-//       if(_pickedImage==null){
-// ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please pick an image"),));
-// return;
-
-//       }
-      _formKey.currentState!.save();
-      // String imageUrl=await productProvider.uploadImageToFirebase(_pickedImage!);
-
-      final product=Product(
-        id: '',
-         name: productName!,
-         description: description!,
-          price: price!,
-          
-          //  imageUrl: imageUrl,
-            category: selectedCategory ?? '',
-             stock: stockQuantity!,
-              brand: brand!, 
-              color: selectedColor,
-              size: selectedSize,
-              // isFavorite: 
-              );
-              await productProvider.addSingleProduct(product);
-
-      // Build product data here, e.g. assign sizes and colors selected
-
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Product successfully added!')));
-          Navigator.pop(context);
+    if (enteredCategory.isNotEmpty && !categoryProvider.categories.contains(enteredCategory)) {
+      categoryProvider.addCategory(enteredCategory);
     }
+
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    final supabaseImageProvider = Provider.of<SupabaseImageProvider>(context, listen: false);
+
+    String imageUrl = '';
+    if (_pickedImage != null) {
+      await supabaseImageProvider.uploadImage(_pickedImage!, 'products');
+      imageUrl = supabaseImageProvider.uploadedImageUrl ?? '';
+    }
+
+    final product = Product(
+      id: '',
+      name: productName!,
+      description: description!,
+      price: price!,
+      category: enteredCategory,
+      stock: stockQuantity!,
+      color: selectedColor,
+      size: selectedSize,
+      imageUrl: imageUrl,
+    );
+
+    await productProvider.addSingleProduct(product);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Product successfully added!')),
+    );
+
+    Navigator.pop(context);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 237, 237, 237),
       appBar: AppBar(
-        title: Text('Add Product'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text('Add Product',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.deepPurple,
       ),
       body: SingleChildScrollView(
@@ -123,12 +166,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  GestureDetector(
+  onTap: _pickImage,
+  child: Container(
+    height: 150,
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: Colors.grey.shade200,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: _pickedImage != null
+        ? Image.file(_pickedImage!, fit: BoxFit.cover)
+        : const Icon(Icons.camera_alt_outlined, size: 50, color: Colors.grey),
+  ),
+      ),
+      const SizedBox(height: 16),
+
                   _buildTextField('Product Name', onSaved: (val) => productName = val!, validator: _requiredValidator),
                   // TextFormField(
                   //   controller: nameController,
                   // ),
                   SizedBox(height: 16),
-                  _buildDropdown(),
+                   TextFormField(
+                      controller: categoryController,
+                         decoration: InputDecoration(
+                           labelText: 'Category',
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                                 ),
+                           validator: (value) => (value == null || value.trim().isEmpty) ? 'Please enter a category' : null,
+                                   ),
+                  // _buildTextField('category', onSaved: (val) => productName = val!, validator: _requiredValidator),
+
+                  // _buildDropdown(),
                   SizedBox(height: 16),
                   _buildTextField('Description', maxLines: 4, onSaved: (val) => description = val ?? ''),
                   SizedBox(height: 16),
@@ -173,23 +242,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Row(
   children: 
     sizess.map((size){
-      return Row(
+      return Row( 
         children: [
-          GestureDetector(
-            onTap: (){
-              setState(() {
-                selectedSize = size;
-              });
-            },
-            child: Container( 
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: selectedSize == size ? Colors.deepPurple : Colors.grey, // ✅ Visual feedback
-                
+          SingleChildScrollView(
+            child: GestureDetector(
+              onTap: (){
+                setState(() {
+                  selectedSize = size;
+                });
+              },
+              child: Container( 
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: selectedSize == size ? Colors.deepPurple : Colors.grey, 
+                  
+                ),
+                height: 40,
+                width: 40,
+                child: Center(child: Text(size.toString())),
               ),
-              height: 50,
-              width: 50,
-              child: Center(child: Text(size.toString())),
             ),
           ),
           SizedBox(width: 10),
@@ -198,23 +269,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }).toList()
                 ),
                   SizedBox(height: 24),
-                  // Placeholder for Image Picker section
-                  // GestureDetector(
-                  //   onTap: (){
-                  //    _pickImage();
-                  //   },
-                  //   child: Container(
-                  //     height: 150,  
-                  //     width: double.infinity,
-                  //     decoration: BoxDecoration(
-                  //         color: Colors.grey.shade200, borderRadius: BorderRadius.circular(12)),
-                  //     child: Center(
-                  //       child: _pickedImage != null
-                  //              ? Image.file(_pickedImage!, fit: BoxFit.cover)
-                  //               : Icon(Icons.camera_alt_outlined, size: 50, color: Colors.grey),
-                  //     ),
-                  //   ),
-                  // ),
+              
                   SizedBox(height: 32),
                   Center(
                     child: ElevatedButton(
@@ -237,7 +292,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  // Widget _customTextField(String label,)
 
   Widget _buildTextField(String label,
       {int maxLines = 1,

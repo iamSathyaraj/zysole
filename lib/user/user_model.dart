@@ -1,4 +1,43 @@
+class Address {
+  final String line1;
+  final String? line2;
+  final String city;
+  final String state;
+  final String country;
+  final String postalCode;
+
+  Address({
+    required this.line1,
+    this.line2,
+    required this.city,
+    required this.state,
+    required this.country,
+    required this.postalCode,
+  });
+
+  Map<String, dynamic> toMap() => {
+    'line1': line1,
+    'line2': line2,
+    'city': city,
+    'state': state,
+    'country': country,
+    'postalCode': postalCode,
+  };
+
+  factory Address.fromMap(Map<String, dynamic> map) {
+    return Address(
+      line1: map['line1'],
+      line2: map['line2'],
+      city: map['city'],
+      state: map['state'],
+      country: map['country'],
+      postalCode: map['postalCode'],
+    );
+  }
+}
+
 class AppUser{
+
   final String id;
   final String name;
   final String? userName;
@@ -7,6 +46,7 @@ class AppUser{
   final String? profileImage;
   final String role;
   String status;
+  // Address? address;
 
   AppUser({
     required this.id,
@@ -16,7 +56,8 @@ class AppUser{
      this.phone,
      this.profileImage,
      required this.role,
-     this.status="active"
+     this.status="active",
+      // this.address
   });
 
   factory AppUser.fromMap(Map<String, dynamic>data, String id){
@@ -27,7 +68,9 @@ class AppUser{
       phone: data['phone']?? ' ',
       profileImage: data['profileImage']?? ' ',
       role: data['role']?? 'user',
-      status: data['status']?? 'Active'
+      status: data['status']?? 'Active',
+
+      // address: data['address']?? " "
       );
   }
 
@@ -39,7 +82,8 @@ class AppUser{
       'phone':phone,
       'profileImage':profileImage,
       'role':role,
-      'status':status
+      'status':status,
+      // 'address':address
     };
   }
 

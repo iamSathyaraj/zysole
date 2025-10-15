@@ -1,3 +1,7 @@
+// import 'dart:math';
+import 'dart:developer';
+
+
 import 'package:e_commerce/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import '../services/cart_service.dart';
@@ -11,7 +15,9 @@ class CartProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  /// Load user's cart from Firebase
+  //  String _setError;
+  // String get serError=>_setError;
+
   void loadCart(String userId) {
     _isLoading = true;
     notifyListeners();
@@ -23,15 +29,12 @@ class CartProvider extends ChangeNotifier {
     });
   }
 
-  /// Add product to cart
   Future<void> addToCart(CartItem item) async {
     try {
-      // Check if the product already exists in cart
       CartItem? existingItem =
           await _cartService.getCartItemByProduct(item.userId, item.productId);
 
       if (existingItem != null) {
-        // If it exists, increase quantity
         final updatedItem = CartItem(
           id: existingItem.id,
           productId: existingItem.productId,
@@ -46,22 +49,39 @@ class CartProvider extends ChangeNotifier {
 
         await _cartService.updateCartItem(updatedItem);
       } else {
-        // If not, add new item
+
         await _cartService.addToCart(item);
       }
     } catch (e) {
-      print('Error adding to cart in provider: $e');
+      // _setError=e.toString;
+      log('Error adding to cart in provider: $e');
     }
   }
 
-  /// Remove item from cart
   Future<void> removeFromCart(String cartItemId) async {
     try {
       await _cartService.removeCartItem(cartItemId);
     } catch (e) {
-      print('Error removing from cart in provider: $e');
+      log('Error removing from cart in provider: $e');
     }
   }
+
+  double get totalPrice {
+  double total = 0;
+  for (var item in _cartItems) {
+    total += item.price * item.quantity;
+  }
+  return total;
+}
+
+int get totalItems {
+  int count = 0;
+  for (var item in _cartItems) {
+    count += item.quantity;
+  }
+  return count;
+}
+
 
   /// Clear all cart items for a user
   // Future<void> clearCart(String userId) async {

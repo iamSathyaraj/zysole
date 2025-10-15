@@ -1,3 +1,5 @@
+import 'package:e_commerce/user/views/bottom_nav_menu.dart';
+import 'package:e_commerce/user/views/home_screen.dart';
 import 'package:e_commerce/user/views/users_list.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +62,7 @@ class _OrderPlacedCongratsScreenState
                 width: 200,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>UserManagementScreen())); 
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>BottomNavMenu())); 
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,

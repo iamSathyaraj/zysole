@@ -1,325 +1,8 @@
-// import 'package:flutter/material.dart';
-
-// class AdminAddProduct extends StatelessWidget {
-//    AdminAddProduct({super.key});
- 
-// final _formKey=GlobalKey<FormState>();
-//  final _nameController=TextEditingController();
-//  final _priceController = TextEditingController();
-//  final _categoryController = TextEditingController();
-//  final _quantityController = TextEditingController();
-//  final _descriptionController = TextEditingController();
-
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text("Add product"),centerTitle: true),
-//       body: Container(
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             children: [
-//             Text("Upload the product image"),
-//             SizedBox(height: 20),
-//             Center(
-//               child: Container(
-//                 height: 150,
-//                 width: 150,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(15)
-//                 ),
-//                 child: Icon(Icons.camera_alt_outlined),
-//               ),
-//             ),
-//             SizedBox(height: 30),
-//             Text("Product Name",
-//              style: TextStyle(
-//               color: const Color.fromARGB(255, 70, 69, 69),
-//               fontSize: 20),),
-//             Container(
-//               width: double.infinity,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _nameController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 20),
-//             Row(
-//               children: [
-//                 Column(
-          
-//                 children: [
-//                  Text("Price"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _priceController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//                 ]
-               
-//                 ),
-          
-//              Column(
-//               children: [
-//                  Text("Qty"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _quantityController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//               ],
-//              )
-//             ]
-//             ),
-          
-//             SizedBox(
-//               height: 20
-//             ),
-//              Text("Category"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _categoryController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//               SizedBox(
-//               height: 20
-//             ),
-//              Text("subCategory"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _categoryController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//               SizedBox(height: 20),
-//            Text("description"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _descriptionController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//           ]
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-// import 'package:flutter/material.dart';
-
-// class AdminAddProduct extends StatelessWidget {
-//    AdminAddProduct({super.key});
- 
-// final _formKey=GlobalKey<FormState>();
-//  final _nameController=TextEditingController();
-//  final _priceController = TextEditingController();
-//  final _categoryController = TextEditingController();
-//  final _quantityController = TextEditingController();
-//  final _descriptionController = TextEditingController();
-
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text("Add product"),centerTitle: true),
-//       body: Container(
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             children: [
-//             Text("Upload the product image"),
-//             SizedBox(height: 20),
-//             Center(
-//               child: Container(
-//                 height: 150,
-//                 width: 150,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(15)
-//                 ),
-//                 child: Icon(Icons.camera_alt_outlined),
-//               ),
-//             ),
-//             SizedBox(height: 30),
-//             Text("Product Name",
-//              style: TextStyle(
-//               color: const Color.fromARGB(255, 70, 69, 69),
-//               fontSize: 20),),
-//             Container(
-//               width: double.infinity,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _nameController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 20),
-//             Row(
-//               children: [
-//                 Column(
-          
-//                 children: [
-//                  Text("Price"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _priceController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//                 ]
-               
-//                 ),
-          
-//              Column(
-//               children: [
-//                  Text("Qty"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _quantityController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//               ],
-//              )
-//             ]
-//             ),
-          
-//             SizedBox(
-//               height: 20
-//             ),
-//              Text("Category"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _categoryController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//               SizedBox(
-//               height: 20
-//             ),
-//              Text("subCategory"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _categoryController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//               SizedBox(height: 20),
-//            Text("description"),
-//                    SizedBox(height: 10),
-//              Container(
-//               width: 150,
-//               height: 30,
-//               decoration: BoxDecoration(
-//                 color: const Color.fromARGB(255, 167, 177, 188)
-//               ),
-//               child: TextFormField(
-//                 controller: _descriptionController,
-//                 decoration: InputDecoration(
-//                   border: InputBorder.none
-//                 ),
-//               ),
-//               ),
-//           ]
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'dart:io';
 
 import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/admin/models/product_model.dart';
+import 'package:e_commerce/controllers/supabse_image_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -330,6 +13,7 @@ class AdminEditProduct extends StatefulWidget {
 }
 
 class _AdminEditProductState extends State<AdminEditProduct> {
+
   final _formKey = GlobalKey<FormState>();
   String? productName ;
   String? description ;
@@ -373,44 +57,55 @@ class _AdminEditProductState extends State<AdminEditProduct> {
 
 
 
-  // Future<void> _pickImage() async {
-  //   final ImagePicker _picker = ImagePicker();
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-  //   if (image != null) {
-  //     setState(() {
-  //       _pickedImage = File(image.path);
-  //     });
-  //   }
-  // }
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() {
+        _pickedImage = File(image.path);
+      });
+    }
+  }
 
   void _submitForm() async{ 
     final productProvider = Provider.of<ProductProvider>(context, listen: false);
+      final supabaseImageProvider = Provider.of<SupabaseImageProvider>(context, listen: false);
+
     if (_formKey.currentState!.validate()) {
 
 
-//       if(_pickedImage==null){
-// ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please pick an image"),));
-// return;
+      if(_pickedImage==null){
+ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please pick an image"),));
+return;
 
-//       }
+      }
       _formKey.currentState!.save();
+        await supabaseImageProvider.uploadImage(_pickedImage!, 'products');
+
+
+    if (supabaseImageProvider.uploadedImageUrl == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Image upload failed")),
+    );
+    return;
+  }
       // String imageUrl=await productProvider.uploadImageToFirebase(_pickedImage!);
 
-      final product=Product(
+      final updatedProduct=Product(
         id: '',
          name: productName!,
          description: description!,
           price: price!,
           
-          //  imageUrl: imageUrl,
+           imageUrl: supabaseImageProvider.uploadedImageUrl,
             category: selectedCategory ?? '',
              stock: stockQuantity!,
-              brand: brand!, 
+              // brand: brand!, 
               color: selectedColor,
               size: selectedSize,
               // isFavorite: 
               );
-              await productProvider.addSingleProduct(product);
+              await productProvider.addSingleProduct(updatedProduct);
 
       // Build product data here, e.g. assign sizes and colors selected
 
@@ -441,6 +136,23 @@ class _AdminEditProductState extends State<AdminEditProduct> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+                  GestureDetector(
+  onTap: _pickImage,
+  child: Container(
+    height: 150,
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: Colors.grey.shade200,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: _pickedImage != null
+        ? Image.file(_pickedImage!, fit: BoxFit.cover)
+        : const Icon(Icons.camera_alt_outlined, size: 50, color: Colors.grey),
+  ),
+),
+const SizedBox(height: 16),
+
                   _buildTextField('Product Name', onSaved: (val) => productName = val!, validator: _requiredValidator),
                   // TextFormField(
                   //   controller: nameController,

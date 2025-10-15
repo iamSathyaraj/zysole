@@ -106,7 +106,6 @@ final GoogleSignIn _googleSignIn = GoogleSignIn();
 
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if(googleUser == null){
-      // if the user cancelled the sign in
       return null;
     }
 

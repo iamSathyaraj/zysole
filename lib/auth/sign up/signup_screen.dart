@@ -1,5 +1,3 @@
-
-
 import 'package:e_commerce/user/user_model.dart';
 import 'package:e_commerce/core/constants/text_strings.dart';
 import 'package:e_commerce/user/views/bottom_nav_menu.dart';

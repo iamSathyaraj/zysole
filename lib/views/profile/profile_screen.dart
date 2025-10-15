@@ -69,14 +69,14 @@ class _ProfileScreensState extends State<ProfileScreens> {
      final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.user;
 
-    //  final userName = "Hello";
-    //  final userEmail = "hello@gmail.com";
+ 
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 248, 248),
       appBar: AppBar(
         title: Text('Account Profile',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.deepPurple,
+        shape: RoundedRectangleBorder( borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
       ),
      body: user == null
     ? Center(

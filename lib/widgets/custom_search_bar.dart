@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  final String text;
+  final TextEditingController controller;
+  final Function(String)? onChanged;
+  final String hintText;
   final IconData icon;
-  // final Function void onTap;
+
   const CustomSearchBar({
-    required this.text,
-    required this.icon, 
-    // this.onTap,
-    super.key});
+    Key? key,
+    required this.controller,
+    required this.icon,
+    required this.hintText,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(12),
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.0),
-            border: Border.all(color: Colors.grey),
-          ),
-          child: Row(
-            children: [
-              Icon(icon,color: const Color.fromARGB(255, 68, 67, 67)),
-              SizedBox(width: 10),
-              Text(text, style: TextStyle(),)
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: TextField(
+          controller: controller,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: Colors.grey),
+            hintText: hintText,
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.all(12),
           ),
         ),
       ),

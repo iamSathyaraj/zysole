@@ -25,7 +25,13 @@ class FavoriteScreen extends StatelessWidget {
       return const Center(child: Text("No favorites yet"));
     }
 
-    return Padding(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Favorite products"),
+      ),
+      body: 
+     Padding(
       padding: const EdgeInsets.all(8),
       child: GridView.builder(
         shrinkWrap: true,
@@ -42,18 +48,20 @@ class FavoriteScreen extends StatelessWidget {
           final isFav = favoriteProvider.isFavorite(product.id);
 
           return HomeProductCard(
+            imageUrl: '',
             label: "Best Seller",
             title: product.name,
-            price: product.price.toString(),
+            price: product.price.toDouble(),
             isFavourite: isFav,
-            onTap: () {
+            onFavouriteTap: () {
               favoriteProvider.toggleFavorite(product.id);
             },
-            onAdd: () {
+            onAddTap: () {
             },
           );
         },
       ),
+    )
     );
   }
 }

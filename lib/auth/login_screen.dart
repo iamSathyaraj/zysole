@@ -8,6 +8,8 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
   import 'package:e_commerce/auth/sign%20up/signup_screen.dart';
   import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
   import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
   import 'package:provider/provider.dart';
 
   class LoginScreen extends StatefulWidget {
@@ -18,6 +20,7 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
   }
 
   class _LoginScreenState extends State<LoginScreen> { 
+    bool isLoading=false;
 
     bool _rememberMe=false;
     bool _obscurePassword = true;
@@ -28,25 +31,29 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
     TextEditingController passwordController = TextEditingController();
     Future<void> _login() async {
   if (_formKey.currentState!.validate()) {
+    setState(() {
+      isLoading=true;
+    });
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
-      // Step 1: Attempt login
       await authProvider.loginUser(
         emaiController.text.trim(),
         passwordController.text.trim(),
       );
+      setState(() {
+        isLoading=false;
+      });
 
-      // Step 2: Check if login was successful
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
+        isLoading=false;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Login failed: No user found")),
         );
         return;
       }
 
-      // Step 3: Fetch user data from Firestore
       final userDoc = await FirebaseFirestore.instance
           .collection("users")
           .doc(user.uid)
@@ -62,12 +69,12 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
       final userData = userDoc.data()!;
       final role = userData['role'] ?? 'user';
 
-      // Step 4: Navigate based on role
       if (role == 'admin') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const AdminDashboard()),
         );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
       } else {
         Navigator.pushReplacement(
           context,
@@ -81,50 +88,6 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
     }
   }
 }
-
-
-//     Future<void>_login()async{
-//     if(_formKey.currentState!.validate()){
-//                 final authProvider =Provider.of<AuthProvider>(context, listen: false);
-
-//        User? user=FirebaseAuth.instance.currentUser;
-//         if(user!=null){
-//         final userDocs=await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
-//            if(userDocs.exists){
-//             final userData=userDocs.data()!;
-//             final role=userData['role'] ??'user';
-//             if(role=='admin'){
-//             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminDashboard()));
-
-//             }else if(role=="user"){
-//             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavMenu()));
-
-//             }
-
-//            }
-
-//         }
-
-//         await  authProvider.loginUser(emaiController.text.trim(), 
-//         passwordController.text.trim());
-//       if (authProvider.user!= null) {
-//        if (
-
-//         // authProvider.user!.role == 'admin'
-//         ) {
-//   } else {
-//     Navigator.pushReplacement(
-//       context,
-//       MaterialPageRoute(builder: (_) => const BottomNavMenu()),
-//     );
-//   }
-// } else {
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(content: Text(authProvider.errorMessage ?? "Login failed")),
-//   );
-// }   
-//      }
-//       }
         @override
   void dispose() {
     emaiController.dispose();
@@ -261,16 +224,16 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
                                 });
                               },
                             ),
-                            const Text(TextConstants.rememberMe),
+                            // const Text(TextConstants.rememberMe),
                           ],
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            TextConstants.forgetPassword,
-                            style: TextStyle(color: Colors.deepPurple),
-                          ),
-                        ),
+                        // TextButton(
+                        //   onPressed: () {},
+                        //   child: const Text(
+                        //     TextConstants.forgetPassword,
+                        //     style: TextStyle(color: Colors.deepPurple),
+                        //   ),
+                        // ),
                       ],
                     ),
 
@@ -287,12 +250,13 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
                           ),
                           elevation: 5,
                         ),
-                        onPressed: _login
+                        onPressed:  isLoading ? null: _login
                         ,
-                        child: const Text(
+                        child: isLoading?CircularProgressIndicator():
+                         Text(
                           TextConstants.signIn,
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
                         ),
                       ),
                     ),
@@ -363,7 +327,7 @@ import 'package:e_commerce/user/views/bottom_nav_menu.dart';
                                border: Border.all(color: Colors.blue, width: 2),
                                  shape: BoxShape.circle,
                               ),
-                          child: Icon(Icons.g_mobiledata, size: 30, color: Colors.red),
+                          child: Image.asset("assets/images/google_logo.jpeg",fit: BoxFit.contain,),
                            ),
                   ),
                 ],

@@ -4,28 +4,41 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
   import 'package:e_commerce/admin/models/product_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-  // import 'package:flutter/material.dart';
 
   class ProductService{
 
   final FirebaseFirestore _firestores=FirebaseFirestore.instance;
   final CollectionReference _productCollection=FirebaseFirestore.instance.collection("products");
 
-  
+    
 
+Future<void> addProduct(Product product) async {
+  try {
+    final docRef = _productCollection.doc(); 
+    final productWithId = product.copyWith(id: docRef.id); 
+    await docRef.set(productWithId.toMap());
+    log("Product added successfully with id: ${docRef.id}");
+  } on FirebaseException catch (e) {
+    log("Add product error: $e");
+    throw Exception("Failed to add product: ${e.message}");
+  } catch (e) {
+    log("error adding product: $e");
+    throw Exception("error adding product: $e");
+  }
+}
 
-  Future<void> addProduct(Product product) async {
-      try {
-        await _productCollection.add(product.toMap());
-              log("Product added successfully");
-         } on FirebaseException catch (e) {
-        log("Add product error: $e");
-        throw Exception("Failed to add product: ${e.message}");
-      }catch (e){
-        log("error adding product$e");
-        throw Exception("error adding product$e");
-      }
-    }
+  // Future<void> addProduct(Product product) async {
+  //     try {
+  //       await _productCollection.doc(product.id).set(product.toMap());
+  //             log("Product added successfully");
+  //        } on FirebaseException catch (e) {
+  //       log("Add product error: $e");
+  //       throw Exception("Failed to add product: ${e.message}");
+  //     }catch (e){
+  //       log("error adding product$e");
+  //       throw Exception("error adding product$e");
+  //     }
+  //   }
 
   Future<void>updateProduct(String productId, Product product)async{
 

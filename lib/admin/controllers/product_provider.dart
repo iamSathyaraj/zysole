@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/admin/models/product_model.dart';
@@ -31,7 +29,7 @@ final ProductService _productService =ProductService();
  void fetchProducts(){
   _productService.getProducts().listen((productsList){
     _products =productsList;
-    
+
     notifyListeners();
   });
  }
