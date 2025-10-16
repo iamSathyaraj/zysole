@@ -1,9 +1,9 @@
 
 import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/admin/models/product_model.dart';
-import 'package:e_commerce/controllers/auth_provider.dart';
-import 'package:e_commerce/controllers/cart_provider.dart';
-import 'package:e_commerce/models/cart_model.dart';
+import 'package:e_commerce/auth/controller/auth_provider.dart';
+import 'package:e_commerce/user/controller/cart_provider.dart';
+import 'package:e_commerce/user/models/cart_model.dart';
 import 'package:e_commerce/user/views/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -59,9 +59,10 @@ void fetchProduct() async{
 
   @override
   Widget build(BuildContext context) {
-    if(product==null){
+    final currentProduct=product;
+    if(currentProduct==null){
       return Scaffold(
-       body: CircularProgressIndicator(),
+       body: Center(child: CircularProgressIndicator()),
       );
     }
     return SafeArea(
@@ -109,14 +110,23 @@ void fetchProduct() async{
                                   color: Colors.amber
                                 ),
                               ),
-                              Container(
-                                height: 200,
-                                width: 300,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(0, 111, 192, 114)
-                                ),
-                                child: Image.asset("assets/images/nike_air_max.png",fit: BoxFit.contain,),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: currentProduct .imageUrl != null && currentProduct.imageUrl!.isNotEmpty ? Image.network(
+                              currentProduct.imageUrl!,
+                              height: 150,
+                              width: 100,
+                                ):Icon(Icons.image_outlined)
+
                               )
+                              // Container(
+                              //   height: 200,
+                              //   width: 300,
+                              //   decoration: BoxDecoration(
+                              //     color: const Color.fromARGB(0, 111, 192, 114)
+                              //   ),
+                              //   child: Image.asset("assets/images/nike_air_max.png",fit: BoxFit.contain,),
+                              // )
                               ]
                             ),
                           )
@@ -151,7 +161,7 @@ void fetchProduct() async{
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: Text(product!.name,
+                          child: Text(currentProduct.name,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -174,7 +184,7 @@ void fetchProduct() async{
                       style: TextStyle(color: Colors.grey[400], fontSize: 13),
                     ),
                     SizedBox(height: 18),
-                    Text(product!.description,
+                    Text(currentProduct.description,
                       style: TextStyle(color: Colors.grey[400], fontSize: 13),
                     ),
                     SizedBox(height: 24),
@@ -264,7 +274,7 @@ void fetchProduct() async{
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                           ),
                           onPressed: () async{
-                            final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                            final authProvider = Provider.of<AuthProviderr>(context, listen: false);
   final cartProvider = Provider.of<CartProvider>(context, listen: false);
   final currentUser = authProvider.user;
 
@@ -277,11 +287,13 @@ void fetchProduct() async{
 
   final cartItem = CartItem(
     id: UniqueKey().toString(), 
-    productId: product!.id,
+    productId: currentProduct.id,
     userId: currentUser.id,
-    name: product!.name,
-    price: product!.price,
+    name: currentProduct.name,
+    price: currentProduct.price,
     quantity: 1,
+    imageUrl: currentProduct.imageUrl,
+    size: selectedSize.toString()
   );
 
   try {

@@ -60,7 +60,7 @@
 //               trailing: 
 //               TextButton(onPressed: (){
 //                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>UserDetailScreen(user: user)));
-//               }, child: const
+//                                              }, child: const
 //               //  Icon(Icons.arrow_forward_ios_rounded, size: 18)
 //               Text("View details..")
 //                ),
@@ -71,10 +71,10 @@
 //                 //     builder: (_) => UserDetailScreen(user: user),
 //                 //   ),
 //                 // );
-//               },
+//                        },
 //             ),
 //           );
-//         },
+//                },
 //       ),
 //     );
 //   }

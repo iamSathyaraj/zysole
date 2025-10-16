@@ -1,5 +1,5 @@
-import 'package:e_commerce/controllers/cart_provider.dart';
-import 'package:e_commerce/models/cart_model.dart';
+import 'package:e_commerce/user/controller/cart_provider.dart';
+import 'package:e_commerce/user/models/cart_model.dart';
 import 'package:e_commerce/user/views/bottom_nav_menu.dart';
 import 'package:e_commerce/user/views/cart/widgets/empty_cart_card.dart';
 // import 'package:e_commerce/user/views/home_screen.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
    CartScreen({super.key,});
-    final List<String>cartItems=[];
+    final List<CartItem>cartItems=[];
      String? totalPrice;
 
   @override
@@ -92,7 +92,7 @@ class CartScreen extends StatelessWidget {
                               // ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: item.imageUrl != null
+                                child: item.imageUrl != null &&item.imageUrl!.isNotEmpty
                                     ? Image.network(
                                         item.imageUrl!,
                                         height: 90,

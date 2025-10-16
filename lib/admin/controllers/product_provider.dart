@@ -4,6 +4,7 @@ import 'package:e_commerce/admin/models/product_model.dart';
 import 'package:e_commerce/admin/services/product_service.dart';
 import 'package:flutter/material.dart';
 
+
 class ProductProvider extends ChangeNotifier{
 
 final ProductService _productService =ProductService();

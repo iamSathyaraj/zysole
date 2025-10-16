@@ -1,22 +1,22 @@
     import 'dart:ffi';
 
   import 'package:e_commerce/admin/models/product_model.dart';
-    import 'package:e_commerce/controllers/auth_provider.dart';
-    import 'package:e_commerce/controllers/cart_provider.dart';
-import 'package:e_commerce/controllers/category_provider.dart';
-    import 'package:e_commerce/controllers/favorite_provider.dart';
+    import 'package:e_commerce/auth/controller/auth_provider.dart';
+    import 'package:e_commerce/user/controller/cart_provider.dart';
+import 'package:e_commerce/controller/category_provider.dart';
+    import 'package:e_commerce/user/controller/favorite_provider.dart';
     import 'package:e_commerce/admin/controllers/product_provider.dart';
-    import 'package:e_commerce/auth/login_screen.dart';
-    import 'package:e_commerce/models/cart_model.dart';
-    import 'package:e_commerce/user/views/cart_screen.dart';
+    import 'package:e_commerce/auth/login/login_screen.dart';
+    import 'package:e_commerce/user/models/cart_model.dart';
+    // import 'package:e_commerce/user/views/cart_screen.dart';
     import 'package:e_commerce/user/views/home/widgets/custom_banner.dart';
-    import 'package:e_commerce/user/views/home/widgets/custom_category.dart';
+    // import 'package:e_commerce/user/views/home/widgets/custom_category.dart';
     import 'package:e_commerce/user/views/product_detail_screen.dart';
-    import 'package:e_commerce/widgets/custom_search_bar.dart';
+    // import 'package:e_commerce/widgets/custom_search_bar.dart';
     import 'package:e_commerce/widgets/home_product_card.dart';
     import 'package:flutter/material.dart';
     import 'package:provider/provider.dart';
-    import 'package:carousel_slider/carousel_slider.dart';
+    // import 'package:carousel_slider/carousel_slider.dart';
 
     class HomeScreen extends StatefulWidget {
       const HomeScreen({super.key});
@@ -24,9 +24,13 @@ import 'package:e_commerce/controllers/category_provider.dart';
       @override
       State<HomeScreen> createState() => _HomeScreenState();
     }
+    
+
+
 
     class _HomeScreenState extends State<HomeScreen> {
       final List<String> categories = ['All', 'nike', 'adidas', 'puma'];
+
 
 
       String? selectedCategory;
@@ -40,9 +44,10 @@ import 'package:e_commerce/controllers/category_provider.dart';
             Provider.of<ProductProvider>(context, listen: false);
         final favoriteProvider =
             Provider.of<FavoriteProvider>(context, listen: false);
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final authProvider = Provider.of<AuthProviderr>(context, listen: false);
 
         productProvider.fetchProducts();
+        // authProvider.fetchCurrentUser();
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (authProvider.user != null) {
@@ -109,7 +114,7 @@ Widget buildCategoryButtons() {
 
 
       Future<void> showLogoutDialog(BuildContext context) async {
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final authProvider = Provider.of<AuthProviderr>(context, listen: false);
 
         await showDialog(
           context: context,
@@ -163,7 +168,7 @@ Widget buildCategoryButtons() {
         title: Row(
           children: [
             Flexible(
-              child: Consumer<AuthProvider>(
+              child: Consumer<AuthProviderr>(
                 builder: (context, authProvider, child) {
                   final userName = authProvider.user?.name??'User';
                   return Row(
@@ -345,7 +350,7 @@ Widget buildCategoryButtons() {
                           return;
                         }
 
-                        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                        final authProvider = Provider.of<AuthProviderr>(context, listen: false);
                         final cartProvider = Provider.of<CartProvider>(context, listen: false);
                         final currentUser = authProvider.user;
 
@@ -364,6 +369,7 @@ Widget buildCategoryButtons() {
                           price: product.price,
                           quantity: 1,
                           size: selectedSize.toString(), 
+                          imageUrl: product.imageUrl
                         );
 
                         try {

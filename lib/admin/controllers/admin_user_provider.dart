@@ -2,7 +2,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:e_commerce/user/user_model.dart';
+import 'package:e_commerce/user/models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -56,6 +56,8 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> blockStatusButton(AppUser user) async {
+        _errorMessage = null;
+
     try {
       final newStatus = user.status == "blocked" ? "active" : "blocked";
       await _firestore.collection("users").doc(user.id).update({"status": newStatus});
@@ -70,13 +72,13 @@ class UserProvider extends ChangeNotifier {
   Future<AppUser?> fetchUserById(String userId) async {
     _isLoading=true;
     _errorMessage=null;
+    _selectedUser=null;
       notifyListeners();
     try {
       DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
         _selectedUser= AppUser.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       } else{
-        _selectedUser=null;
         _errorMessage="user not found";
       }
     } catch (e) {
@@ -86,6 +88,7 @@ class UserProvider extends ChangeNotifier {
       _isLoading=false;
       notifyListeners();
     }
+    return _selectedUser;
     // notifyListeners();
     // return null;
   }

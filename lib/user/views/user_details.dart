@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/admin/controllers/admin_user_provider.dart';
-import 'package:e_commerce/user/user_model.dart';
+import 'package:e_commerce/user/models/user_model.dart';
 import 'package:e_commerce/user/views/new_orderlist.dart';
 import 'package:e_commerce/user/views/new_userdetail.dart';
 import 'package:e_commerce/user/views/order_detail.dart';

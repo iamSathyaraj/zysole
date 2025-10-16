@@ -1,5 +1,5 @@
 
-import 'package:e_commerce/controllers/favorite_provider.dart';
+import 'package:e_commerce/user/controller/favorite_provider.dart';
 import 'package:e_commerce/admin/controllers/product_provider.dart';
 import 'package:e_commerce/widgets/home_product_card.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class FavoriteScreen extends StatelessWidget {
           final isFav = favoriteProvider.isFavorite(product.id);
 
           return HomeProductCard(
-            imageUrl: '',
+            imageUrl: product.imageUrl??'',
             label: "Best Seller",
             title: product.name,
             price: product.price.toDouble(),

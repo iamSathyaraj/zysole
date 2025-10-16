@@ -19,6 +19,16 @@ import 'package:provider/provider.dart';
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    final productProvider=Provider.of<ProductProvider>(context, listen: false);
+    productProvider.fetchProducts();
+    final usersCount = Provider.of<UserProvider>(context,listen: false);
+    usersCount.fetchUsers();
+
+  }
   // @override
   // Widget build(BuildContext context) {
   //   return const Placeholder();
@@ -29,8 +39,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final productProvider=Provider.of<ProductProvider>(context);
-    final usersCount = Provider.of<UserProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,15 +51,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         mainAxisSpacing: 12,
         children: [
           GestureDetector(onTap:(){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddProductScreen()));
-          },child:  _buildStatCard("Add Products", productProvider.products.length.toString(), Icons.add)),
+
+          },child:  Consumer<ProductProvider>(builder: (context, value, child) => 
+             _buildStatCard("Add Products", value.products.length
+            .toString(), Icons.add),
+          )
+          ),
           GestureDetector(onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminProductListScreen()));
-          }, child: _buildStatCard("Total Products", productProvider.products.length.toString() , Icons.shopping_bag)),
+
+          }, child: Consumer<ProductProvider>(builder: (context, value, child) => 
+            _buildStatCard("Total Products", value.products.length.toString() , Icons.shopping_bag))),
           _buildStatCard("Orders Pending",  "15", Icons.pending_actions),
           _buildStatCard("Revenue", "\$12,340", Icons.attach_money),
           GestureDetector(onTap: (){
-            // Navigator.push(context, MaterialPageRoute(builder: (context)=>()));
-          }, child: _buildStatCard("Users", usersCount.users.length.toString(), Icons.people)),
+          }, child: Consumer<UserProvider>(builder: (context, userValue, child) =>
+             _buildStatCard("Users", userValue.users.length.toString(), Icons.people))),
         ], 
       ),
     );

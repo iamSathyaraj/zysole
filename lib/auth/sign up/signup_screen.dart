@@ -1,10 +1,10 @@
-import 'package:e_commerce/user/user_model.dart';
+import 'package:e_commerce/user/models/user_model.dart';
 import 'package:e_commerce/core/constants/text_strings.dart';
 import 'package:e_commerce/user/views/bottom_nav_menu.dart';
-import 'package:e_commerce/auth/login_screen.dart';
+import 'package:e_commerce/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:e_commerce/controllers/auth_provider.dart';
+import 'package:e_commerce/auth/controller/auth_provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -48,7 +48,7 @@ if(password!=passwordConfirm){
         phone: phoneNumberController.text.trim()
       );
 
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<AuthProviderr>(context, listen: false);
         await authProvider.signUpUser(appUser, password);
 
         if (authProvider.user != null) {

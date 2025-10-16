@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 
-import 'package:e_commerce/models/cart_model.dart';
+import 'package:e_commerce/user/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import '../services/cart_service.dart';
 
@@ -40,7 +40,7 @@ class CartProvider extends ChangeNotifier {
           productId: existingItem.productId,
           userId: existingItem.userId,
           name: existingItem.name,
-          // imageUrl: existingItem.imageUrl,
+          imageUrl: existingItem.imageUrl,
           price: existingItem.price,
           quantity: existingItem.quantity + item.quantity,
           color: item.color ?? existingItem.color,

@@ -1,7 +1,13 @@
+import 'package:e_commerce/auth/controller/auth_provider.dart';
+import 'package:e_commerce/user/controller/address_provider.dart';
+import 'package:e_commerce/user/models/address_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddressScreen extends StatefulWidget {
-  const AddressScreen({super.key});
+final Address? address;
+
+  const AddressScreen({super.key, this.address});
 
   @override
   State<AddressScreen> createState() => _AddressScreenState();
@@ -10,12 +16,64 @@ class AddressScreen extends StatefulWidget {
 class _AddressScreenState extends State<AddressScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController line1Controller = TextEditingController();
-  final TextEditingController line2Controller = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController stateController = TextEditingController();
-  final TextEditingController countryController = TextEditingController();
-  final TextEditingController postalCodeController = TextEditingController();
+  late TextEditingController line1Controller;
+  // late TextEditingController line2Controller ;
+  late TextEditingController cityController;
+  late TextEditingController stateController;
+  late TextEditingController countryController;
+  late TextEditingController postalCodeController;
+
+  @override
+  void initState() {
+    super.initState();
+    line1Controller = TextEditingController(text: widget.address?.street ?? '');
+// line2Controller = TextEditingController(text: widget.address?. ?? ''); // if line 2 exists, else ''
+cityController = TextEditingController(text: widget.address?.city ?? '');
+stateController = TextEditingController(text: widget.address?.state ?? '');
+postalCodeController = TextEditingController(text: widget.address?.postalCode ?? '');
+countryController = TextEditingController(text: widget.address?.country ?? '');
+
+
+  }
+
+   @override
+  void dispose() {
+    line1Controller.dispose();
+    // line2Controller.dispose();
+    cityController.dispose();
+    postalCodeController.dispose();
+    countryController.dispose();
+    stateController.dispose();
+    super.dispose();
+  }
+
+   Future<void> _saveAddress() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final userId = Provider.of<AuthProviderr>(context, listen: false).user?.id ?? '';
+      final addressProvider = Provider.of<AddressProvider>(context, listen: false);
+
+      final newAddress = Address(
+        id: widget.address?.id ?? userId, // use userId as doc id or generate unique id
+        userId: userId,
+        street: line1Controller.text.trim(),
+        city: cityController.text.trim(),
+        state: stateController.text.trim(),
+        postalCode: postalCodeController.text.trim(),
+        country: countryController.text.trim(),
+        // phoneNumber: postalCodeController.text.trim(),
+      );
+
+      await addressProvider.saveAddress(newAddress);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Address saved successfully')),
+
+      );
+    
+
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +93,10 @@ class _AddressScreenState extends State<AddressScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 customLabel("Address Line 1"),
-                customTextField(line1Controller, "Enter address line 1", true),
+                customTextField( line1Controller, "Enter address line 1", true),
 
-                customLabel("Address Line 2 (optional)"),
-                customTextField(line2Controller, "Enter address line 2", false),
+                // customLabel("Address Line 2 (optional)"),
+                // customTextField(line2Controller, "Enter address line 2", false),
 
                 customLabel("City"),
                 customTextField(cityController, "Enter city", true),
@@ -67,6 +125,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          _saveAddress();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text("Address saved successfully!"),

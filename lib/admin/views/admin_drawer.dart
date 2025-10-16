@@ -2,10 +2,10 @@ import 'package:e_commerce/admin/views/admin_dashboard.dart';
 import 'package:e_commerce/admin/views/product/admin_product_list.dart';
 import 'package:e_commerce/admin/views/order_list.dart';
 import 'package:e_commerce/admin/views/user_management.dart';
-import 'package:e_commerce/auth/login_screen.dart';
+import 'package:e_commerce/auth/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:e_commerce/controllers/auth_provider.dart' as custom_auth_provider;
+import 'package:e_commerce/auth/controller/auth_provider.dart' as custom_auth_provider;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,14 +47,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
     ),
     content: Text("Are you sure want to logout"),
     actions: [
-      ElevatedButton(onPressed: (){
+      // ElevatedButton(onPressed: (){
+      //   Navigator.pop(context);
+      // }, child: Text("Cancel")),
+      TextButton(onPressed: (){
         Navigator.pop(context);
       }, child: Text("Cancel")),
             ElevatedButton(onPressed: (){
                Navigator.pop(context);
-                 Provider.of<custom_auth_provider.AuthProvider>(context, listen: false).logout();
+                 Provider.of<custom_auth_provider.AuthProviderr>(context, listen: false).logout();
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-            }, child: Text("Add")),
+            }, child: Text("Delete")),
 
     ],
   )

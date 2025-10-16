@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_commerce/user/user_model.dart';
+import 'package:e_commerce/user/models/user_model.dart';
 import 'package:e_commerce/services/auth_service.dart';
 
-class AuthProvider extends ChangeNotifier {
+class AuthProviderr extends ChangeNotifier {
   final AuthService _authService = AuthService();
 
   AppUser? _user;

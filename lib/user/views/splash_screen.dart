@@ -5,7 +5,9 @@ import 'package:e_commerce/admin/views/admin_drawer.dart';
 import 'package:e_commerce/user/views/bottom_nav_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:e_commerce/auth/login_screen.dart';
+import 'package:e_commerce/auth/login/login_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:e_commerce/auth/controller/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,7 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
     _checkUser();
+  });
+    // _checkUser();
 
   } 
 
@@ -53,18 +58,21 @@ class _SplashScreenState extends State<SplashScreen> {
       final data = userDoc.data()!;
       final role = data['role'] ?? 'user';
 
+      final authProvider=Provider.of<AuthProviderr>(context,listen: false);
+      await authProvider.fetchCurrentUser();
+
+
+
       if (role == 'admin') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const AdminDashboard()),
-        );
+      Navigator.pushAndRemoveUntil(context,
+       MaterialPageRoute(builder: (context)=>const AdminDashboard()),
+        (route)=>false);
       } else if(role=='user') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const BottomNavMenu()),
-        );
+       Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context)=>BottomNavMenu()), (route)=>false);
       }else{
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+        Navigator.pushReplacement(context,
+         MaterialPageRoute(builder: (context)=>LoginScreen()));
       }
       // }
 

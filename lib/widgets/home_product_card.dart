@@ -45,15 +45,17 @@
                   // ),
                   Container(
                     width: double.infinity,
-                    color: const Color.fromARGB(255, 239, 202, 202),
+                    // color: const Color.fromARGB(255, 239, 202, 202),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
                       child: 
                       (imageUrl!.isNotEmpty)?
                                  
-                      Image.network(imageUrl!,
-                      fit: BoxFit.cover,
-                       height: 90,width: double.infinity):
+                      ClipRRect(
+                        child: Image.network(imageUrl!,
+                        fit: BoxFit.cover,
+                         height: 90,width: double.infinity),
+                      ):
                                      
                       Icon(Icons.image_not_supported, size: 70, color: Colors.grey),
                     
@@ -130,7 +132,7 @@
                 bottom: 10,
                 right: 10,
                 child: Material(
-                  color: Color(0xff2575fc),
+                  color: Color.fromARGB(255, 91, 146, 241),
                   shape: const CircleBorder(),
                   child: InkWell(
                     onTap: onAddTap,

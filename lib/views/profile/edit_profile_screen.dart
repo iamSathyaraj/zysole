@@ -1,7 +1,12 @@
 
-import 'package:e_commerce/controllers/auth_provider.dart';
-import 'package:e_commerce/user/user_model.dart';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce/auth/controller/auth_provider.dart';
+import 'package:e_commerce/admin/controllers/supabse_image_provider.dart';
+import 'package:e_commerce/user/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -23,7 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    final user = Provider.of<AuthProvider>(context, listen: false).user;
+    final user = Provider.of<AuthProviderr>(context, listen: false).user;
     _nameController = TextEditingController(text: user?.name ?? '');
     _userNameController = TextEditingController(text: user?.userName ?? '');
     _emailController = TextEditingController(text: user!.email);
@@ -33,9 +38,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+        _userNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void>_pickImage()async{
+  
+  showModalBottomSheet(context: context, builder: (context){
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: Icon(Icons.photo_library),
+              title: Text("pick image from gallery"),
+              onTap: (){
+                Navigator.pop(context);
+                _pickImageResource(ImageSource.gallery);
+              },
+            ),
+              ListTile(
+              leading: Icon(Icons.photo_camera),
+              title: Text("pick image from camera"),
+              onTap: (){
+                _pickImageResource(ImageSource.camera);
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  });
+
+
+  }
+  Future<void>_pickImageResource(ImageSource source)async{
+  final picker = ImagePicker();
+  final pickedImages = await picker.pickImage(source: source);
+  if(pickedImages!=null){
+    setState(() {
+          _pickedImages=File(pickedImages.path);
+
+    });
+  }
+
+
+
   }
 
   Future<void> _saveProfile() async {
@@ -43,13 +94,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {
         _isLoading = true;
       });
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+ 
+
+  final authProvider = Provider.of<AuthProviderr>(context, listen: false);
+  final supabaseImageProvider=Provider.of<SupabaseImageProvider>(context, listen: false);
+  final userId=authProvider.user?.id ?? '';
+ 
+  String profileImageUrl='';
+
+   if(_pickedImages!=null){
+    // await supabaseImageProvider.uploadProfileimage(_pickedImages!, userId, 'profile');
+    // profileImageUrl=
+    //  await SupabaseImageProvider().uploadProfileimage(_pickedImages!, userId, 'profile');
+     profileImageUrl=    await supabaseImageProvider.uploadProfileimage(_pickedImages!, userId, 'profile')??"";
+
+    //  supabaseImageProvider.uploadedProfileImage!;
+
+   }
+
+
+      // final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final updatedUser = AppUser(
         id: authProvider.user!.id,
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
         role: authProvider.user!.role,
         phone: _phoneController.text.trim(),
+        profileImage: profileImageUrl
       );
 
       await authProvider.updateProfile(updatedUser);
@@ -64,9 +135,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fix errors in the form")),
-      );
-    }
-  }
+       );
+     }
+   }
+
+   File? _pickedImages;
 
   InputDecoration _inputDecoration(String label, {IconData? icon}) {
     return InputDecoration(
@@ -105,13 +178,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           elevation: 4,
-          shadowColor: Colors.deepPurple.withValues(),
+          shadowColor: const Color(0xFF673AB7).withValues(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
+                  GestureDetector(
+                    onTap: (){
+                      _pickImage();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                      color: const Color.fromARGB(100, 104, 58, 183),
+                      borderRadius: BorderRadius.circular(10)
+                      ),
+                      height: 100,
+                      width: 100,
+                      child: _pickedImages!=null? ClipRRect(  
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.file(_pickedImages!, fit: BoxFit.cover,),
+                      ):
+                      Icon(Icons.image_outlined,size: 50,),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
                   TextFormField(
                     controller: _nameController,
                     decoration: _inputDecoration("Full Name", icon: Icons.person),

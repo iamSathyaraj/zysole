@@ -1,15 +1,15 @@
   import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce/controllers/auth_provider.dart';
+import 'package:e_commerce/auth/controller/auth_provider.dart';
   import 'package:e_commerce/core/constants/colors.dart';
   import 'package:e_commerce/core/constants/text_strings.dart';
   import 'package:e_commerce/admin/views/admin_drawer.dart';
-import 'package:e_commerce/user/views/bottom_nav_menu.dart';
+  import 'package:e_commerce/user/views/bottom_nav_menu.dart';
   import 'package:e_commerce/user/views/home_screen.dart';
   import 'package:e_commerce/auth/sign%20up/signup_screen.dart';
   import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
   import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
+  import 'package:flutter_signin_button/button_list.dart';
+  import 'package:flutter_signin_button/button_view.dart';
   import 'package:provider/provider.dart';
 
   class LoginScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ import 'package:flutter_signin_button/button_view.dart';
     setState(() {
       isLoading=true;
     });
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProviderr>(context, listen: false);
 
     try {
       await authProvider.loginUser(
@@ -98,7 +98,7 @@ import 'package:flutter_signin_button/button_view.dart';
 
       @override
     Widget build(BuildContext context) {
-      final authProvider = Provider.of<AuthProvider>(context);
+      final authProvider = Provider.of<AuthProviderr>(context);
 
        return Scaffold(
       backgroundColor: Colors.white,
@@ -309,7 +309,7 @@ import 'package:flutter_signin_button/button_view.dart';
                 children: [
                   GestureDetector(
                     onTap: () async{
-                          final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                          final authProvider = Provider.of<AuthProviderr>(context, listen: false);
                            await authProvider.signInWithGoogleAcc();
                              if (authProvider.user != null) {
                                 Navigator.pushReplacement( context,
@@ -327,7 +327,8 @@ import 'package:flutter_signin_button/button_view.dart';
                                border: Border.all(color: Colors.blue, width: 2),
                                  shape: BoxShape.circle,
                               ),
-                          child: Image.asset("assets/images/google_logo.jpeg",fit: BoxFit.contain,),
+                          // child: Image.asset("assets/images/google_logo.jpeg",fit: BoxFit.contain,),
+                          child: Icon(Icons.g_mobiledata),
                            ),
                   ),
                 ],

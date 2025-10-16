@@ -1,5 +1,5 @@
 import 'package:e_commerce/admin/controllers/admin_user_provider.dart';
-import 'package:e_commerce/user/user_model.dart';
+import 'package:e_commerce/user/models/user_model.dart';
 import 'package:e_commerce/user/views/user_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
