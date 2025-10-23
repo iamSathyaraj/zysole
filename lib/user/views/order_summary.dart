@@ -1,3 +1,5 @@
+import 'package:e_commerce/admin/controllers/order_provider.dart';
+import 'package:e_commerce/admin/models/order_model.dart';
 import 'package:e_commerce/user/controller/address_provider.dart';
 import 'package:e_commerce/user/controller/cart_provider.dart';
 import 'package:e_commerce/user/models/address_model.dart';
@@ -25,11 +27,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final double shippingFee = 15.0;
 
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    @override
+
 void initState() {
   super.initState();
     final authProvider = Provider.of<AuthProviderr>(context, listen: false);
@@ -39,7 +37,7 @@ void initState() {
   addressProvider.fetchAddress(userId);
 }
 
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -301,13 +299,48 @@ void initState() {
                   child: SizedBox(
                     width: double.infinity,
                     height: 52,
+                    
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderPlacedCongratsScreen()));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Order placed successfully!')),
-                        );
-                      },
+                      
+                      
+onPressed: () async {
+  final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+final authProvider = Provider.of<AuthProviderr>(context, listen: false);
+final cartProvider = Provider.of<CartProvider>(context, listen: false);
+  // Build orderItems from cartItems
+  List<OrderItem> orderItems = cartProvider.cartItems.map((cartItem) => OrderItem(
+    productId: cartItem.id,
+    productName: cartItem.name,
+    image: cartItem.imageUrl ?? '',
+    price: cartItem.price,
+    quantity: cartItem.quantity,
+  )).toList();
+
+  final order = OrderModel(
+    orderId: UniqueKey().toString(), // or use UUID
+    userId: authProvider.user!.id,
+    userName: authProvider.user!.name ?? '',
+    orderItems: orderItems,
+    orderStatus: 'Pending',
+    orderAmount: cartProvider.totalPrice + shippingFee,
+    orderDate: DateTime.now(),
+  );
+
+  try {
+    await orderProvider.addOrder(order);
+    cartProvider.cartItems;
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => OrderPlacedCongratsScreen()));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Order placed successfully!')));
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to place order: $e')));
+  }
+},
+                      // onPressed: () {
+                      //   Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderPlacedCongratsScreen()));
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     const SnackBar(content: Text('Order placed successfully!')),
+                      //   );
+                      // },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         shape: RoundedRectangleBorder(

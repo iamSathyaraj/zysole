@@ -67,7 +67,7 @@ Future<void>updatetheProduct(Product product, String id)async{
   try{
     await _productService.updateProduct(id, product);
   }catch (e){
-    _erroMessage="error in updating produc:${e.toString()}";
+    _erroMessage = "error in updating produc:${e.toString()}";
     // log("error updating product");
   } 
   finally{

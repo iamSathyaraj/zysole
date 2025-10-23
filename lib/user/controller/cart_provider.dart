@@ -65,6 +65,12 @@ class CartProvider extends ChangeNotifier {
       log('Error removing from cart in provider: $e');
     }
   }
+  Future<void> clearCart() async {
+  for (var item in List.from(_cartItems)) {
+    await removeFromCart(item.id);
+  }
+}
+
 
   double get totalPrice {
   double total = 0;

@@ -6,7 +6,6 @@ class NewOrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🧠 Static dummy order data
     final Map<String, dynamic> orderData = {
       'customerName': 'John Doe',
       'customerEmail': 'john@example.com',

@@ -1,4 +1,5 @@
 import 'package:e_commerce/admin/controllers/admin_user_provider.dart';
+import 'package:e_commerce/admin/controllers/order_provider.dart';
 import 'package:e_commerce/auth/controller/auth_provider.dart';
 import 'package:e_commerce/config/supabase_config.dart';
 import 'package:e_commerce/user/controller/cart_provider.dart';
@@ -32,7 +33,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => SupabaseImageProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
-        ChangeNotifierProvider(create: (_) => AddressProvider())
+        ChangeNotifierProvider(create: (_) => AddressProvider()),
+        ChangeNotifierProvider(create: (_)=>OrderProvider())
       ],
       child: const MyApp(),
     ),
